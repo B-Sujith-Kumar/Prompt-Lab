@@ -150,7 +150,7 @@ const Header = () => {
               )}
               <SignedOut>
                 <Link
-                  href="/login"
+                  href="/sign-in"
                   className="login-btn text-lg  max-sm:w-full max-sm:text-center max-sm:py-3"
                   onClick={() => setIsOpen(false)}
                 >

@@ -1,0 +1,82 @@
+.fade-at-bottom {
+  position: relative;
+}
+
+.fade-at-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20px; /* Adjust the height of the fade as needed */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  filter: blur(40px);
+}
+
+.bg-img {
+  background-image: url("../../../public/images/star-cluster-purple.avif");
+  background-repeat: no-repeat;
+}
+
+.bg-pos {
+  background-position: -60% 80%;
+}
+
+.gradient-container::after {
+  content: "";
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  width: 30%;
+  height: 50%;
+  background: radial-gradient(circle, rgba(206, 163, 255, 0.3) 0%, #173c60 70%);
+  transform: translate(-50%, -50%);
+  filter: blur(100px);
+  z-index: -1;
+}
+
+.gradient {
+  height: fit-content;
+  z-index: -3;
+  width: 100%;
+  max-width: 640px;
+  background-image: radial-gradient(
+      at 27% 37%,
+      hsla(215, 98%, 61%, 1) 0px,
+      transparent 0%
+    ),
+    radial-gradient(at 97% 21%, hsla(125, 98%, 72%, 1) 0px, transparent 50%),
+    radial-gradient(at 52% 99%, hsla(354, 98%, 61%, 1) 0px, transparent 50%),
+    radial-gradient(at 10% 29%, hsla(256, 96%, 67%, 1) 0px, transparent 50%),
+    radial-gradient(at 97% 96%, hsla(38, 60%, 74%, 1) 0px, transparent 50%),
+    radial-gradient(at 33% 50%, hsla(222, 67%, 73%, 1) 0px, transparent 50%),
+    radial-gradient(at 79% 53%, hsla(343, 68%, 79%, 1) 0px, transparent 50%);
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  filter: blur(100px) saturate(150%);
+  top: 80px;
+  opacity: 0.15;
+}
+
+.box-shadow {
+  box-shadow: 0 7px 15px 0 rgba(193, 166, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  .bg-pos {
+    background-position: 150% 40%;
+  }
+}
+
+@media (max-width: 530px) {
+  .bg-pos {
+    background-position: 80% 80%;
+  }
+}

@@ -1,0 +1,54 @@
+.gradient {
+    height: fit-content;
+    z-index: 3;
+    width: 500%;
+    max-width: 640px;
+    background-image: radial-gradient(
+        at 27% 37%,
+        hsla(215, 98%, 61%, 1) 0px,
+        transparent 0%
+      ),
+      radial-gradient(at 97% 21%, hsla(125, 98%, 72%, 1) 0px, transparent 50%),
+      radial-gradient(at 52% 99%, hsla(354, 98%, 61%, 1) 0px, transparent 50%),
+      radial-gradient(at 10% 29%, hsla(256, 96%, 67%, 1) 0px, transparent 50%),
+      radial-gradient(at 97% 96%, hsla(38, 60%, 74%, 1) 0px, transparent 50%),
+      radial-gradient(at 33% 50%, hsla(222, 67%, 73%, 1) 0px, transparent 50%),
+      radial-gradient(at 79% 53%, hsla(343, 68%, 79%, 1) 0px, transparent 50%);
+    position: absolute;
+    content: "";
+    width: 500%;
+    height: 100%;
+    filter: blur(100px) saturate(150%);
+    top: 80px;
+    opacity: 0.15;
+  }
+  
+  .bg-img {
+    background-image: url("../../../public/images/contact-glow.944a9bf8.svg");
+    background-repeat: no-repeat;
+  }
+  
+  .bg-pos {
+    background-position: left center;
+  }
+  
+  .bg-noise {
+    background-image: url("../../../public/images/noise.4f431ba5.png");
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    background-blend-mode: soft-light;
+    background-color: rgb(10 22 40) / 1;
+  }
+  
+  .bg-color {
+    background-color: inherit;
+  }
+  
+  .bg-corner {
+    background-image: url("../../../public/images/contact-page-contact-form.png");
+    background-position: bottom right;
+    background-size: 500px 400px;
+    background-repeat: no-repeat;
+    background-color: #0a1628;
+  }
+  
