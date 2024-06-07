@@ -57,6 +57,19 @@ const PromptSchema = new Schema(
         },
       },
     ],
+    platform: [
+      {
+        type: String,
+        enum: [
+          "ChatGPT",
+          "Midjourney",
+          "Notion AI",
+          "Bard",
+          "Leonardo AI",
+          "Stable Diffusion",
+        ],
+      },
+    ],
   },
   { timestamps: true }
 );
