@@ -2,7 +2,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenFancy } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faArrowRight,
+  faPenFancy,
+} from "@fortawesome/free-solid-svg-icons";
 import { faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = () => {
@@ -10,8 +14,8 @@ const Sidebar = () => {
 
   return (
     <div className="font-worksans">
-      <div className="hidden lg:flex flex-col w-64 min-h-screen border-r-[0.4px] text-white">
-        <div className="p-4 pl-6 mt-4 text-3xl font-semibold border-b-[0.4px]">
+      <div className="hidden lg:flex flex-col w-64 min-h-screen border-r-[0.6px] border-slate-600 text-white">
+        <div className="p-4 pb-6 pl-6 mt-4 text-2xl font-semibold border-b-[0.6px] border-slate-600">
           Workspace
         </div>
         <nav className="flex-1 flex flex-col gap-3 px-4 py-5 space-y-1">
@@ -29,20 +33,14 @@ const Sidebar = () => {
             <FontAwesomeIcon icon={faWandMagicSparkles} />
             Ask AI
           </Link>
-          <Link
-            href="/"
-            className="block px-4 py-2 text-sm text-gray-300 rounded hover:bg-gray-700"
-          >
-            Contact
-          </Link>
         </nav>
       </div>
 
       <button
-        className="lg:hidden fixed top-28 left-4 bg-gray-800 text-white p-2 rounded"
+        className="lg:hidden fixed top-[115px] left-4  text-white p-2 rounded"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {isOpen ? "Close" : "Open"} Sidebar
+        {isOpen ? "Close" : <FontAwesomeIcon icon={faArrowRight} />}
       </button>
 
       {isOpen && (
@@ -52,37 +50,38 @@ const Sidebar = () => {
         ></div>
       )}
 
-      {/* Sidebar for small screens */}
       <div
         className={`lg:hidden fixed inset-0 z-40 transition-transform transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } w-64 bg-gray-800 text-white`}
+        } w-64  bg-background text-white`}
       >
-        <div className="p-4">Logo</div>
-        <button
-          className="lg:hidden bg-gray-800 mt-10 text-white p-2 rounded"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? "Close" : "Open"} Sidebar
-        </button>
-        <nav className="flex-1 px-4 py-2 space-y-1">
+        <div className="p-4 mt-24 flex items-center justify-between">
+          <h2 className="text-white text-2xl font-semibold">Workspace</h2>
+          <button
+            className="lg:hidden  text-white p-2 rounded"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? (
+              <FontAwesomeIcon icon={faArrowLeft} />
+            ) : (
+              <FontAwesomeIcon icon={faArrowRight} />
+            )}
+          </button>
+        </div>
+        <nav className="flex-1 flex flex-col gap-3 px-4 py-5 space-y-1">
           <Link
             href="/"
-            className="block px-4 py-2 text-sm text-gray-300 rounded hover:bg-gray-700"
+            className="flex py-2 gap-4 items-center text-white hover:bg-gray-700 px-3 rounded-md"
           >
-            Home
+            <FontAwesomeIcon icon={faPenFancy} />
+            Upload Prompt
           </Link>
           <Link
             href="/"
-            className="block px-4 py-2 text-sm text-gray-300 rounded hover:bg-gray-700"
+            className="flex py-2 gap-4 items-center text-white hover:bg-gray-700 px-3 rounded-md"
           >
-            About
-          </Link>
-          <Link
-            href="/"
-            className="block px-4 py-2 text-sm text-gray-300 rounded hover:bg-gray-700"
-          >
-            Contact
+            <FontAwesomeIcon icon={faWandMagicSparkles} />
+            Ask AI
           </Link>
         </nav>
       </div>
