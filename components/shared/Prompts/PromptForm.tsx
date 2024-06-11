@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
+import { aiLogos } from "@/lib/exports";
+
 import {
   Form,
   FormControl,
@@ -25,6 +27,15 @@ type PromptForm = {
   type: "Create";
 };
 const PromptForm = ({ userId, type }: PromptForm) => {
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
+
+  const togglePlatform = (platform: string) => {
+    setSelectedPlatforms((prev) =>
+      prev.includes(platform)
+        ? prev.filter((p) => p !== platform)
+        : [...prev, platform]
+    );
+  };
   const [files, setFiles] = useState<File[]>([]);
   const initialValues = {
     title: "",
@@ -46,7 +57,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 mt-8 px-3 text-white font-worksans"
+        className="space-y-8 mt-8 px-3 pb-8 text-white font-worksans"
       >
         <div className="flex flex-col gap-8 md:flex-row md:gap-10">
           <FormField
@@ -64,7 +75,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
                     className="rounded-full border-slate-400 py-3 px-4 text-lg max-sm:text-base"
                   />
                 </FormControl>
-                <FormMessage className="text-red-500" />
+                <FormMessage className="text-red-500 pt-2" />
               </FormItem>
             )}
           />
@@ -83,7 +94,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
                     className="rounded-full border-slate-400 py-3 px-4 text-lg max-sm:text-base"
                   />
                 </FormControl>
-                <FormMessage className="text-red-500" />
+                <FormMessage className="text-red-500 pt-2" />
               </FormItem>
             )}
           />
@@ -105,7 +116,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
                     rows={8}
                   />
                 </FormControl>
-                <FormMessage className="text-red-500" />
+                <FormMessage className="text-red-500 pt-2" />
               </FormItem>
             )}
           />
@@ -129,12 +140,37 @@ const PromptForm = ({ userId, type }: PromptForm) => {
             )}
           />
         </div>
+        <div>
+          <FormDescription className="text-xl max-sm:text-lg font-medium">
+            Select one or more platforms
+          </FormDescription>
+          <div className="grid grid-cols-6 gap-8 mt-8 max-[1220px]:grid-cols-5 max-lg:grid-cols-5 max-md:grid-cols-3 max-[560px]:grid-cols-2 max-[390px]:grid-cols-2">
+            {aiLogos.map((platform) => (
+              <div
+                key={platform.alt}
+                className={`cursor-pointer max-w- py-6 border-2 rounded ${
+                  selectedPlatforms.includes(platform.alt)
+                    ? "border-blue-500 scale-95"
+                    : "border-gray-600"
+                }  opacity-95 rounded-xl  hover:scale-105 transition-transform duration-300 ease-in-out active:scale-95 px-2 `}
+                onClick={() => togglePlatform(platform.alt)}
+              >
+                <Image
+                  src={platform.src}
+                  alt={platform.alt}
+                  className="h-16 w-16 mx-auto bg-white rounded-full "
+                />
+                <p className="text-center mt-2 font-medium">{platform.alt}</p>
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="flex md:items-center md:justify-center">
           <Button
             type="submit"
             className="max-md:w-full text-lg  text-center bg-btn-primary"
           >
-            Submit
+            Upload Prompt
           </Button>
         </div>
       </form>

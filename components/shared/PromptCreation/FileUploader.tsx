@@ -60,7 +60,7 @@ export function FileUploader({
             height={77}
             alt="file upload"
           />
-          <h3 className="mb-2 mt-2 text-slate-300">Drag photo here</h3>
+          <h3 className="mb-2 mt-2 text-slate-300">Drag & drop photo here</h3>
           <p className="p-medium-12 mb-4 text-slate-300">SVG, PNG, JPG</p>
           <Button type="button" className="rounded-full px-3 bg-btn-primary">
             Select from device

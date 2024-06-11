@@ -14,7 +14,7 @@ const Sidebar = () => {
 
   return (
     <div className="font-worksans relative">
-      <div className="hidden lg:flex flex-col w-64 min-h-screen border-r-[0.6px] border-slate-600 text-white">
+      <div className="hidden lg:flex flex-col w-64 min-h-screen h-full border-r-[0.6px] border-slate-600 text-white">
         <div className="p-4 pb-6 pl-6 mt-4 text-2xl font-semibold border-b-[0.6px] border-slate-600">
           Workspace
         </div>
@@ -37,7 +37,7 @@ const Sidebar = () => {
       </div>
 
       <button
-        className="lg:hidden absolute top-[26px] left-4 text-white p-2 rounded z-50"
+        className="lg:hidden absolute top-[26px] z-10 left-4 text-white p-2 rounded"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? "" : <FontAwesomeIcon icon={faArrowRight} />}

@@ -8,7 +8,7 @@ const CreatePrompt = async () => {
     <div className="flex">
       <Sidebar />
       <div className="flex-1 p-4">
-        <h1 className="text-white font-montserrat mt-4 max-sm:text-xl md:text-center max-md:pl-10 text-2xl font-semibold">
+        <h1 className="text-white font-montserrat mt-4 max-sm:text-xl md:text-center max-md:pl-10 text-2xl font-semibold orange_gradient">
           Create & Upload Prompt
         </h1>
         <PromptForm userId={userId} type="Create" />

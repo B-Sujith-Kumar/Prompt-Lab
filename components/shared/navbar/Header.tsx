@@ -104,7 +104,7 @@ const Header = () => {
         <div
           className={`${
             isOpen ? "block" : "hidden"
-          } lg:hidden fixed min-h-screen bg-background z-10 w-full top-0 left-0 px-7 bg-img`}
+          } lg:hidden fixed min-h-screen bg-background z-50 w-full top-0 left-0 px-7 bg-img`}
         >
           {/* <div className="gradient -z-10"></div> */}
           <div className="flex justify-between pt-10">

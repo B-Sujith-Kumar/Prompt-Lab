@@ -12,7 +12,7 @@
     @apply font-medium border-[1px] border-white px-7 py-2 rounded-md;
   }
   .orange_gradient {
-    @apply bg-gradient-to-r from-violet-400 via-violet-300 to-blue-500 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-purple-400 via-violet-300  to-orange-400 bg-clip-text text-transparent;
   }
 }
 
