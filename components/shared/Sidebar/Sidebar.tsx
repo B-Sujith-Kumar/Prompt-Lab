@@ -6,14 +6,14 @@ import {
   faArrowLeft,
   faArrowRight,
   faPenFancy,
+  faWandMagicSparkles,
 } from "@fortawesome/free-solid-svg-icons";
-import { faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="font-worksans">
+    <div className="font-worksans relative">
       <div className="hidden lg:flex flex-col w-64 min-h-screen border-r-[0.6px] border-slate-600 text-white">
         <div className="p-4 pb-6 pl-6 mt-4 text-2xl font-semibold border-b-[0.6px] border-slate-600">
           Workspace
@@ -37,10 +37,10 @@ const Sidebar = () => {
       </div>
 
       <button
-        className="lg:hidden fixed top-[115px] left-4  text-white p-2 rounded"
+        className="lg:hidden absolute top-[26px] left-4 text-white p-2 rounded z-50"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {isOpen ? "Close" : <FontAwesomeIcon icon={faArrowRight} />}
+        {isOpen ? "" : <FontAwesomeIcon icon={faArrowRight} />}
       </button>
 
       {isOpen && (
@@ -53,12 +53,12 @@ const Sidebar = () => {
       <div
         className={`lg:hidden fixed inset-0 z-40 transition-transform transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } w-64  bg-background text-white`}
+        } w-64 bg-background text-white`}
       >
         <div className="p-4 mt-24 flex items-center justify-between">
           <h2 className="text-white text-2xl font-semibold">Workspace</h2>
           <button
-            className="lg:hidden  text-white p-2 rounded"
+            className="lg:hidden text-white p-2 rounded"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? (
