@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import midjourney from "@/public/images/AILogo/midjourney.webp";
 import { promptFormSchema } from "@/lib/validator";
 import FileUploader from "../PromptCreation/FileUploader";
 import { useState } from "react";
@@ -33,6 +32,8 @@ const PromptForm = ({ userId, type }: PromptForm) => {
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [tagValue, setTagValue] = useState("");
+  const [tagError, setTagError] = useState("");
+  const [platformError, setPlatformError] = useState("");
   const addTag = (newTag: string) => {
     if (newTag.trim() && !tags.includes(newTag)) {
       setTags([...tags, newTag.trim()]);
@@ -52,8 +53,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
     description: "",
     content: "",
     thumbnail: "",
-    platform: [],
-    tags: [],
+    collection: "",
   };
   const form = useForm<z.infer<typeof promptFormSchema>>({
     resolver: zodResolver(promptFormSchema),
@@ -61,6 +61,16 @@ const PromptForm = ({ userId, type }: PromptForm) => {
   });
 
   function onSubmit(values: z.infer<typeof promptFormSchema>) {
+    if (tags.length === 0) {
+      setTagError("Add a tag");
+      return;
+    }
+    if (selectedPlatforms.length === 0) {
+      setPlatformError("Select a platform");
+      return;
+    }
+    setTagError("");
+    setPlatformError("");
     console.log(values);
   }
   return (
@@ -153,7 +163,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
         <div className="flex flex-col gap-8 md:flex-row md:gap-10">
           <FormField
             control={form.control}
-            name="title" // Change this to "platform"
+            name="collection"
             render={({ field }) => (
               <FormItem className="w-full flex flex-col py-2">
                 <FormLabel className="text-xl max-sm:text-lg mb-2">
@@ -191,7 +201,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
                         <Button
                           type="button"
                           className="text-base bg-btn-primary rounded-full py-3 h-[43px]"
-                          onClick={() => addTag(tagValue)}
+                          onClick={() => {addTag(tagValue); setTagError("")}}
                         >
                           Add Tag
                         </Button>
@@ -218,6 +228,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
                   />
                 </div>
               ))}
+              {tagError && <p className="text-red-500 text-base">{tagError}</p>}
             </div>
             {/* <div className="pb-3">
               <Button
@@ -253,6 +264,9 @@ const PromptForm = ({ userId, type }: PromptForm) => {
               </div>
             ))}
           </div>
+            {platformError && (
+                <p className="text-red-500 text-base mt-4">{platformError}</p>
+            )}
         </div>
 
         <div className="flex md:items-center md:justify-center">

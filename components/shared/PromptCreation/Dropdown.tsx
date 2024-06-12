@@ -28,7 +28,7 @@ type Collection = {
   name: string;
 };
 const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
-  const [collection, setCollection] = useState<string[]>([]);
+  const [collection, setCollection] = useState<string[]>(["Hello", "Bye"]);
   const [collectionInput, setNewCollection] = useState<string>("");
   const handleAddCollection = () => {
 
