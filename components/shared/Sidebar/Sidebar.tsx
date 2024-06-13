@@ -8,10 +8,12 @@ import {
   faPenFancy,
   faWandMagicSparkles,
 } from "@fortawesome/free-solid-svg-icons";
+import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const path = usePathname();
+  console.log(path);
   return (
     <div className="font-worksans relative">
       <div className="hidden lg:flex flex-col w-64 min-h-screen h-full border-r-[0.6px] border-slate-600 text-white">
@@ -71,7 +73,7 @@ const Sidebar = () => {
         <nav className="flex-1 flex flex-col gap-3 px-4 py-5 space-y-1">
           <Link
             href="/"
-            className="flex py-2 gap-4 items-center text-white hover:bg-gray-700 px-3 rounded-md"
+            className={`flex py-2 gap-4 items-center text-white hover:bg-gray-700 px-3 rounded-md ${path === "/prompt/create" ? "bg-gray-700" : ""}`}
           >
             <FontAwesomeIcon icon={faPenFancy} />
             Upload Prompt
