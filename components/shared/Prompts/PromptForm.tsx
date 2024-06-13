@@ -34,6 +34,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
   const [tagValue, setTagValue] = useState("");
   const [tagError, setTagError] = useState("");
   const [platformError, setPlatformError] = useState("");
+  const [selectedCollection, setSelectedCollection] = useState<string>("");
   const addTag = (newTag: string) => {
     if (newTag.trim() && !tags.includes(newTag)) {
       setTags([...tags, newTag.trim()]);
@@ -71,7 +72,8 @@ const PromptForm = ({ userId, type }: PromptForm) => {
     }
     setTagError("");
     setPlatformError("");
-    console.log(values);
+    const newForm = { ...values, tags, platforms: selectedPlatforms };
+    console.log(newForm);
   }
   return (
     <Form {...form}>
@@ -92,7 +94,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
                   <Input
                     placeholder="Title of the prompt ..."
                     {...field}
-                    className="rounded-full border-slate-400 py-3 px-4 text-lg max-sm:text-base"
+                    className="rounded-full focus-visible:ring-transparent border-slate-400 py-3 px-4 text-lg max-sm:text-base"
                   />
                 </FormControl>
                 <FormMessage className="text-red-500 pt-2" />
@@ -111,7 +113,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
                   <Input
                     placeholder="Content of the prompt ..."
                     {...field}
-                    className="rounded-full border-slate-400 py-3 px-4 text-lg max-sm:text-base"
+                    className="rounded-full focus-visible:ring-transparent border-slate-400 py-3 px-4 text-lg max-sm:text-base"
                   />
                 </FormControl>
                 <FormMessage className="text-red-500 pt-2" />
@@ -132,7 +134,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
                   <Textarea
                     placeholder="What is your prompt about? ..."
                     {...field}
-                    className="rounded-2xl border-slate-400 py-3 px-4 text-lg max-sm:text-base"
+                    className="rounded-2xl focus-visible:ring-transparent border-slate-400 py-3 px-4 text-lg max-sm:text-base"
                     rows={8}
                   />
                 </FormControl>
@@ -173,6 +175,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
                   <Dropdown
                     onChangeHandler={field.onChange}
                     value={field.value}
+                    setSelectedCollection={setSelectedCollection}
                   />
                 </FormControl>
                 <FormMessage className="text-red-500 pt-2" />
@@ -193,7 +196,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
                       <Input
                         placeholder="Add a tag"
                         {...field}
-                        className="rounded-full h-[43px] border-slate-400 py-3 px-4 text-lg max-sm:text-base"
+                        className="rounded-full h-[43px] focus-visible:ring-transparent border-slate-400 py-3 px-4 text-lg max-sm:text-base"
                         value={tagValue}
                         onChange={(e) => setTagValue(e.target.value)}
                       />
@@ -201,7 +204,10 @@ const PromptForm = ({ userId, type }: PromptForm) => {
                         <Button
                           type="button"
                           className="text-base bg-btn-primary rounded-full py-3 h-[43px]"
-                          onClick={() => {addTag(tagValue); setTagError("")}}
+                          onClick={() => {
+                            addTag(tagValue);
+                            setTagError("");
+                          }}
                         >
                           Add Tag
                         </Button>
@@ -264,9 +270,9 @@ const PromptForm = ({ userId, type }: PromptForm) => {
               </div>
             ))}
           </div>
-            {platformError && (
-                <p className="text-red-500 text-base mt-4">{platformError}</p>
-            )}
+          {platformError && (
+            <p className="text-red-500 text-base mt-4">{platformError}</p>
+          )}
         </div>
 
         <div className="flex md:items-center md:justify-center">

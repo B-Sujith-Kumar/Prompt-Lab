@@ -13,7 +13,6 @@ import { usePathname } from "next/navigation";
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const path = usePathname();
-  console.log(path);
   return (
     <div className="font-worksans relative">
       <div className="hidden lg:flex flex-col w-64 min-h-screen h-full border-r-[0.6px] border-slate-600 text-white">

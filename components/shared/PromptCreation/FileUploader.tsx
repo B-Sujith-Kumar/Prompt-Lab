@@ -48,7 +48,7 @@ export function FileUploader({
             width={250}
             height={250}
             // className="w-full object-cover object-center"
-            className="h-[250px] w-[250px] rounded-xl object-cover object-center"
+            className="h-[250px] w-full rounded-xl object-cover object-center"
             
           />
         </div>

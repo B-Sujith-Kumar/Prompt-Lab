@@ -14,10 +14,6 @@ const CollectionSchema = new Schema(
       type: String,
       required: true,
     },
-    description: {
-      type: String,
-      required: true,
-    },
     prompts: [
       {
         type: Schema.Types.ObjectId,
@@ -37,6 +33,8 @@ const CollectionSchema = new Schema(
   { timestamps: true }
 );
 
-const Collection = models.Collection || mongoose.model<ICollection>("Collection", CollectionSchema);
+const Collection =
+  models.Collection ||
+  mongoose.model<ICollection>("Collection", CollectionSchema);
 
 export default Collection;
