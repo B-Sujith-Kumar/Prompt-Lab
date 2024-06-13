@@ -48,13 +48,15 @@ const Dropdown = ({
 }: DropdownProps) => {
   const [collection, setCollection] = useState<CollectionProps[]>([]);
   const [collectionInput, setNewCollection] = useState<string>("");
+
   const handleAddCollection = () => {
     createCollection({
       collectionName: collectionInput.trim(),
-    }).then((collection) => {
-      setCollection((prevState) => [...prevState, collection.name]);
+    }).then((newCollection) => {
+      setCollection((prevState) => [...prevState, newCollection]);
     });
   };
+
   useEffect(() => {
     const getCollections = async () => {
       const collectionsList = await fetchAuthorCollections();
@@ -63,6 +65,7 @@ const Dropdown = ({
     };
     getCollections();
   }, []);
+
   return (
     <Select onValueChange={onChangeHandler} defaultValue={value}>
       <SelectTrigger className="w-full bg-grey-50 border-slate-400 h-[43px] placeholder:text-grey-500 rounded-full p-regular-16 px-5 py-3 focus-visible:ring-transparent focus:ring-transparent text-lg">
@@ -73,11 +76,11 @@ const Dropdown = ({
       </SelectTrigger>
       <SelectContent className="bg-background text-white border-[0.3px] border-slate-300 mt-1 p-2">
         {collection.length > 0 ? (
-          collection.map((item, id) => (
+          collection.map((item) => (
             <SelectItem
               key={item._id}
               value={item.name}
-              className="cursor-pointer text-base font-worksans rounded-md py-2 hover:bg-gray-600"
+              className="py-3 cursor-pointer focus:bg-gray-600 text-[14px] font-normal leading-[20px]"
               onClick={() => setSelectedCollection(item._id)}
             >
               {item.name}
@@ -115,11 +118,6 @@ const Dropdown = ({
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-        {/* <SelectItem value="light" className="">
-          Light
-        </SelectItem>
-        <SelectItem value="dark">Dark</SelectItem>
-        <SelectItem value="system">System</SelectItem> */}
       </SelectContent>
     </Select>
   );

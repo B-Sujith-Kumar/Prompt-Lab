@@ -219,9 +219,9 @@ const PromptForm = ({ userId, type }: PromptForm) => {
               )}
             />
             <div className="flex flex-wrap gap-2 mt-2 font-worksans">
-              {tags.map((tag) => (
+              {tags.map((tag, id) => (
                 <div
-                  key={tag}
+                  key={id}
                   className="bg-background border-[0.8px] border-slate-500 text-white text-lg px-4 py-2 rounded-full flex items-center justify-between gap-2 hover:bg-btn-primary hover:text-white transition-colors duration-300 ease-in-out hover:cursor-pointer"
                 >
                   <span className="text-base">{tag}</span>
@@ -251,9 +251,9 @@ const PromptForm = ({ userId, type }: PromptForm) => {
             Select one or more platforms
           </FormDescription>
           <div className="grid grid-cols-6 gap-8 mt-8 max-[1220px]:grid-cols-4 max-lg:grid-cols-4 max-md:grid-cols-3 max-[560px]:grid-cols-2 max-[390px]:grid-cols-2">
-            {aiLogos.map((platform) => (
+            {aiLogos.map((platform, id) => (
               <div
-                key={platform.alt}
+                key={id}
                 className={`cursor-pointer max-w- py-6 border-2 rounded ${
                   selectedPlatforms.includes(platform.alt)
                     ? "border-blue-500 scale-95"
