@@ -15,6 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { promptFormSchema } from "@/lib/validator";
@@ -23,6 +24,8 @@ import { useState } from "react";
 import Dropdown from "../PromptCreation/Dropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import {useUploadThing} from "@/lib/uploadthing";
+import { useRouter } from "next/navigation";
 
 type PromptForm = {
   userId: string;
@@ -35,6 +38,8 @@ const PromptForm = ({ userId, type }: PromptForm) => {
   const [tagError, setTagError] = useState("");
   const [platformError, setPlatformError] = useState("");
   const [selectedCollection, setSelectedCollection] = useState<string>("");
+  const {startUpload} = useUploadThing("imageUploader")
+  const router = useRouter();
   const addTag = (newTag: string) => {
     if (newTag.trim() && !tags.includes(newTag)) {
       setTags([...tags, newTag.trim()]);
@@ -61,7 +66,26 @@ const PromptForm = ({ userId, type }: PromptForm) => {
     defaultValues: initialValues,
   });
 
-  function onSubmit(values: z.infer<typeof promptFormSchema>) {
+  //   function onSubmit(values: z.infer<typeof promptFormSchema>) {
+  //     if (tags.length === 0) {
+  //       setTagError("Add a tag");
+  //       return;
+  //     }
+  //     if (selectedPlatforms.length === 0) {
+  //       setPlatformError("Select a platform");
+  //       return;
+  //     }
+  //     setTagError("");
+  //     setPlatformError("");
+  //     const newForm = {
+  //       ...values,
+  //       tags,
+  //       platforms: selectedPlatforms,
+  //       collection: selectedCollection,
+  //     };
+  //     console.log(newForm);
+  //   }
+  async function onSubmit(values: z.infer<typeof promptFormSchema>) {
     if (tags.length === 0) {
       setTagError("Add a tag");
       return;
@@ -72,8 +96,36 @@ const PromptForm = ({ userId, type }: PromptForm) => {
     }
     setTagError("");
     setPlatformError("");
-    const newForm = { ...values, tags, platforms: selectedPlatforms };
+    const newForm = {
+      ...values,
+      tags,
+      platforms: selectedPlatforms,
+      collection: selectedCollection,
+    };
     console.log(newForm);
+    let uploadedImageUrl = newForm.thumbnail;
+    if (files.length > 0) {
+      const uploadedImages = await startUpload(files);
+
+      if (!uploadedImages) {
+        return;
+      }
+      uploadedImageUrl = uploadedImages[0].url;
+
+    }
+    // try {
+    //     const newPrompt = await createPrompt({
+    //         prompt: {...newForm, thumbnail: uploadedImageUrl},
+    //         userId,
+    //         path: "/profile"
+    //     })
+    //     if (newPrompt) {
+    //         form.reset();
+    //         router.push(`/prompt/${newPrompt._id}`)
+    //     }
+    // } catch (error) {
+    //     console.log(error);
+    // }
   }
   return (
     <Form {...form}>
@@ -173,7 +225,10 @@ const PromptForm = ({ userId, type }: PromptForm) => {
                 </FormLabel>
                 <FormControl>
                   <Dropdown
-                    onChangeHandler={field.onChange}
+                    onChangeHandler={(value) => {
+                      field.onChange(value);
+                      setSelectedCollection(value);
+                    }}
                     value={field.value}
                     setSelectedCollection={setSelectedCollection}
                   />

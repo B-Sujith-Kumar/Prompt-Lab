@@ -9,3 +9,9 @@ export type UpdateUserParams = {
   username: string;
   photo: string;
 };
+
+export type createPromptParams = {
+  prompt: string;
+  userId: string;
+  path: string;
+}

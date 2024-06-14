@@ -54,7 +54,6 @@ export const fetchAuthorCollections = async () => {
         userDetails?.publicMetadata.userId?.toString()
       ),
     });
-    console.log(JSON.parse(JSON.stringify(collections)));
     return JSON.parse(JSON.stringify(collections));
   } catch (error) {
     handleError(error);
