@@ -125,7 +125,7 @@ const PromptSchema = new Schema(
       ref: "User",
       required: true,
     },
-    tags: [{ type: String }],
+    tags: [{ type: Schema.Types.ObjectId, ref: "Tag"}],
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
     comments: [
       {
