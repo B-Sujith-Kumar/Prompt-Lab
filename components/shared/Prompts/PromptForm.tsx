@@ -24,7 +24,7 @@ import { useState } from "react";
 import Dropdown from "../PromptCreation/Dropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
-import {useUploadThing} from "@/lib/uploadthing";
+import { useUploadThing } from "@/lib/uploadthing";
 import { useRouter } from "next/navigation";
 import { createPrompt } from "@/lib/actions/prompts.actions";
 
@@ -39,7 +39,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
   const [tagError, setTagError] = useState("");
   const [platformError, setPlatformError] = useState("");
   const [selectedCollection, setSelectedCollection] = useState<string>("");
-  const {startUpload} = useUploadThing("imageUploader")
+  const { startUpload } = useUploadThing("imageUploader");
   const router = useRouter();
   const addTag = (newTag: string) => {
     if (newTag.trim() && !tags.includes(newTag)) {
@@ -81,10 +81,10 @@ const PromptForm = ({ userId, type }: PromptForm) => {
     const newForm = {
       ...values,
       tags,
-      platforms: selectedPlatforms,
+      platform: selectedPlatforms,
       collection: selectedCollection,
     };
-    console.log(newForm);
+    // console.log(newForm);
     let uploadedImageUrl = newForm.thumbnail;
     if (files.length > 0) {
       const uploadedImages = await startUpload(files);
@@ -93,20 +93,19 @@ const PromptForm = ({ userId, type }: PromptForm) => {
         return;
       }
       uploadedImageUrl = uploadedImages[0].url;
-
     }
     try {
-        const newPrompt = await createPrompt({
-            prompt: {...newForm, thumbnail: uploadedImageUrl},
-            userId,
-            path: "/profile"
-        })
-        if (newPrompt) {
-            form.reset();
-            router.push(`/prompt/${newPrompt._id}`)
-        }
+      const newPrompt = await createPrompt({
+        prompt: { ...newForm, thumbnail: uploadedImageUrl },
+        userId,
+        path: "/profile",
+      });
+      if (newPrompt) {
+        form.reset();
+        router.push(`/prompt/${newPrompt._id}`);
+      }
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
   }
   return (
@@ -317,9 +316,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
             type="submit"
             className="max-md:w-full text-lg  text-center bg-btn-primary"
           >
-            {form.formState.isSubmitting ? (
-            'Submitting...'
-          ): `Upload Prompt`}
+            {form.formState.isSubmitting ? "Submitting..." : `Upload Prompt`}
           </Button>
         </div>
       </form>

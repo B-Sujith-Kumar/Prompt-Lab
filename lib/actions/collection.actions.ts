@@ -20,7 +20,7 @@ export const createCollection = async ({
       return new NextResponse("Unauthorized", { status: 401 });
     }
     const userDetails = await currentUser();
-    console.log(userDetails?.publicMetadata.userId);
+    // console.log(userDetails?.publicMetadata.userId);
     await connectToDatabase();
 
     const newCollection = await Collection.create({

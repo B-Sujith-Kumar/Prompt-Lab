@@ -15,14 +15,14 @@ const populatePrompt = async(query: any) => {
         path: "author", model: User, select: '_id username'
     })
     .populate({
-
+        path: "tags", model: Tag, select: '_id name'
     })
 }
 
 export const createPrompt = async ({prompt, userId, path} : createPromptParams) => {
     try {
         await connectToDatabase();
-        console.log(prompt, userId);
+        // console.log(prompt, userId);
         const author = await User.findById(userId);
         let tags = [];
         if (prompt.tags) {
@@ -43,7 +43,7 @@ export const createPrompt = async ({prompt, userId, path} : createPromptParams) 
             throw new Error("User not found");
         }
 
-        console.log(finalPrompt);
+        // console.log(finalPrompt);
 
         const newPrompt = await Prompt.create({
             ...finalPrompt,
@@ -78,7 +78,7 @@ export const createPrompt = async ({prompt, userId, path} : createPromptParams) 
 export const getPromptById = async (id: string) => {
     try {
        await connectToDatabase();
-         const prompt = await Prompt.findById(id);
+         const prompt = await populatePrompt(Prompt.findById(id));
         if (!prompt) {
             throw new Error("Prompt not found");
         }

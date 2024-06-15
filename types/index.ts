@@ -17,7 +17,7 @@ export type Prompt = {
   thumbnail: string;
   collection: string;
   tags: string[];
-  platforms: string[];
+  platform: string[];
 };
 
 export type userId = {
@@ -28,4 +28,9 @@ export type createPromptParams = {
   prompt: Prompt;
   userId: string;
   path: string;
+};
+
+export type SearchParamProps = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 };
