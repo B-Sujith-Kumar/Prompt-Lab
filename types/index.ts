@@ -10,8 +10,22 @@ export type UpdateUserParams = {
   photo: string;
 };
 
+export type Prompt = {
+  title: string;
+  description: string;
+  content: string;
+  thumbnail: string;
+  collection: string;
+  tags: string[];
+  platforms: string[];
+};
+
+export type userId = {
+  userId: string;
+};
+
 export type createPromptParams = {
-  prompt: string;
+  prompt: Prompt;
   userId: string;
   path: string;
-}
+};

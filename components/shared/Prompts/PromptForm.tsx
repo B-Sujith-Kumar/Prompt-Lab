@@ -26,6 +26,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import {useUploadThing} from "@/lib/uploadthing";
 import { useRouter } from "next/navigation";
+import { createPrompt } from "@/lib/actions/prompts.actions";
 
 type PromptForm = {
   userId: string;
@@ -66,25 +67,6 @@ const PromptForm = ({ userId, type }: PromptForm) => {
     defaultValues: initialValues,
   });
 
-  //   function onSubmit(values: z.infer<typeof promptFormSchema>) {
-  //     if (tags.length === 0) {
-  //       setTagError("Add a tag");
-  //       return;
-  //     }
-  //     if (selectedPlatforms.length === 0) {
-  //       setPlatformError("Select a platform");
-  //       return;
-  //     }
-  //     setTagError("");
-  //     setPlatformError("");
-  //     const newForm = {
-  //       ...values,
-  //       tags,
-  //       platforms: selectedPlatforms,
-  //       collection: selectedCollection,
-  //     };
-  //     console.log(newForm);
-  //   }
   async function onSubmit(values: z.infer<typeof promptFormSchema>) {
     if (tags.length === 0) {
       setTagError("Add a tag");
@@ -113,19 +95,19 @@ const PromptForm = ({ userId, type }: PromptForm) => {
       uploadedImageUrl = uploadedImages[0].url;
 
     }
-    // try {
-    //     const newPrompt = await createPrompt({
-    //         prompt: {...newForm, thumbnail: uploadedImageUrl},
-    //         userId,
-    //         path: "/profile"
-    //     })
-    //     if (newPrompt) {
-    //         form.reset();
-    //         router.push(`/prompt/${newPrompt._id}`)
-    //     }
-    // } catch (error) {
-    //     console.log(error);
-    // }
+    try {
+        const newPrompt = await createPrompt({
+            prompt: {...newForm, thumbnail: uploadedImageUrl},
+            userId,
+            path: "/profile"
+        })
+        if (newPrompt) {
+            form.reset();
+            router.push(`/prompt/${newPrompt._id}`)
+        }
+    } catch (error) {
+        console.log(error);
+    }
   }
   return (
     <Form {...form}>
@@ -335,7 +317,9 @@ const PromptForm = ({ userId, type }: PromptForm) => {
             type="submit"
             className="max-md:w-full text-lg  text-center bg-btn-primary"
           >
-            Upload Prompt
+            {form.formState.isSubmitting ? (
+            'Submitting...'
+          ): `Upload Prompt`}
           </Button>
         </div>
       </form>

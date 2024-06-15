@@ -1,9 +1,11 @@
 import PromptForm from "@/components/shared/Prompts/PromptForm";
 import { auth } from "@clerk/nextjs";
 import Sidebar from "@/components/shared/Sidebar/Sidebar";
+
 const CreatePrompt = async () => {
   const { sessionClaims } = auth();
-  const userId = sessionClaims?.userId as string;
+  const userId: any = sessionClaims?.userId as string;
+  console.log(userId);
   return (
     <div className="flex">
       <Sidebar />
