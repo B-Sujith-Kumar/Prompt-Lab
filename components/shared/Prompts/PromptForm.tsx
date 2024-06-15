@@ -103,7 +103,7 @@ const PromptForm = ({ userId, type }: PromptForm) => {
         })
         if (newPrompt) {
             form.reset();
-            router.push(`/prompt/${newPrompt._id}`)
+            router.push(`/`)
         }
     } catch (error) {
         console.log(error);
