@@ -1,5 +1,8 @@
 import PromptContainer from "@/components/shared/Prompts/PromptContainer";
-import { getPromptById } from "@/lib/actions/prompts.actions";
+import RecentlyAdded from "@/components/shared/Prompts/RecentlyAdded";
+import RelatedPrompts from "@/components/shared/Prompts/RelatedPrompts";
+import { getPromptById, getRelatedPrompts } from "@/lib/actions/prompts.actions";
+import { IPrompt } from "@/lib/database/models/prompt.model";
 import { SearchParamProps } from "@/types";
 import { faCircleXmark, faTag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,8 +10,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 const page = async ({ params: { id } }: SearchParamProps) => {
-  const prompt = await getPromptById(id);
-//   console.log(prompt);
+  const prompt : IPrompt = await getPromptById(id);
+  const relatedPrompts = await getRelatedPrompts({prompt, limit: 6});
   return (
     <div className="md:px-8 max-sm:px-6 pb-6">
       <section className="flex max-md:flex-col max-md:max-w-xl md:max-w-7xl mx-auto gap-8  mt-10   font-worksans text-white md:items-center md:gap-10">
@@ -54,6 +57,20 @@ const page = async ({ params: { id } }: SearchParamProps) => {
         </div>
       </section>
       <PromptContainer prompt={prompt.content} />
+      <section className="my-8 flex flex-col max-md:max-w-xl md:max-w-7xl max-w-7xl mx-auto gap-4 md:gap-12 text-white font-worksans">
+        <h2 className="font-montserrat text-2xl font-semibold">
+          Related Prompts
+        </h2>
+        <RelatedPrompts
+          data={relatedPrompts?.data}
+          emptyTitle="No prompts found"
+          emptyStateSubtext="Come back later"
+          collectionType="All_Prompts"
+          limit={6}
+          page={1}
+          totalPages={2}
+        />
+      </section>
     </div>
   );
 };

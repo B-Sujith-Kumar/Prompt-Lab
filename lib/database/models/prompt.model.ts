@@ -101,7 +101,7 @@ export interface IPrompt {
   description: string;
   content: string;
   createdAt: Date;
-  thumbnail?: string;
+  thumbnail: string;
 //   author: mongoose.Types.ObjectId | {username: string, _id: string};
   author: IUser;
   tags: ITag[];
@@ -109,7 +109,7 @@ export interface IPrompt {
   comments: IComment[];
   platform: string[];
   collection?: mongoose.Types.ObjectId;
-  _id?: string;
+  _id: string;
 }
 
 const PromptSchema = new Schema(

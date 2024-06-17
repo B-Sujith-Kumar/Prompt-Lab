@@ -4,7 +4,7 @@ import { GetAllPromptParams, createPromptParams } from "@/types"
 import { handleError } from "../utils"
 import { connectToDatabase } from "../database"
 import User from "../database/models/user.model"
-import Prompt from "../database/models/prompt.model"
+import Prompt, { IPrompt } from "../database/models/prompt.model"
 import Collection from "../database/models/collection.model"
 import mongoose from "mongoose"
 import Tag from "../database/models/tags.models"
@@ -137,5 +137,23 @@ export const deletePrompt = async ({promptId, path} : {promptId: string, path: s
         if (deletedPrompt) revalidatePath(path);
     } catch (err) {
         handleError(err);
+    }
+}
+
+export const getRelatedPrompts = async ({prompt, limit = 6} : {prompt: IPrompt, limit: number}) => {
+    try {
+        await connectToDatabase();
+        const getPrompt = await Prompt.findById(prompt._id);
+        if (!getPrompt) {
+            throw new Error("Prompt not found");
+        }
+        const relatedPrompts = await populatePrompt(Prompt.find({_id: {$ne: prompt._id}, tags: { $in: getPrompt.tags } }).limit(limit));
+        const totalPages = Math.ceil(relatedPrompts?.length / limit);
+        return {
+            data: JSON.parse(JSON.stringify(relatedPrompts)),
+            totalPages,
+        };
+    } catch (err) {
+        console.log(err)
     }
 }
