@@ -19,8 +19,8 @@ const Header = () => {
       href: "/about",
     },
     {
-      title: "Contact Us",
-      href: "/contact-us",
+      title: "My Profile",
+      href: "/profile",
     },
     {
       title: "Create Prompt",

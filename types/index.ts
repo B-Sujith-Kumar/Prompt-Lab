@@ -3,11 +3,15 @@ export type createUserParams = {
   username: string;
   email: string;
   photo: string;
+  firstName: string;
+  lastName: string;
 };
 
 export type UpdateUserParams = {
   username: string;
   photo: string;
+  firstName: string;
+  lastName: string;
 };
 
 export type Prompt = {
@@ -36,9 +40,9 @@ export type SearchParamProps = {
 };
 
 export type GetAllPromptParams = {
-    page: number;
-    limit: number;
-    collectionType: string;
-    category: string;
-    query: string;
-}
+  page: number;
+  limit: number;
+  collectionType: string;
+  category: string;
+  query: string;
+};

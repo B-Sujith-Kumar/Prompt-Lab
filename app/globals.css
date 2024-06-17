@@ -21,6 +21,6 @@
   box-shadow: 0 2px 15px rgba(134, 85, 255, 0.4);
 }
 
-main {
+body, html, main {
     scroll-behavior: smooth;
 }

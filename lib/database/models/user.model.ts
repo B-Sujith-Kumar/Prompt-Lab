@@ -39,6 +39,8 @@ export interface IUser extends Document {
   following: mongoose.Types.ObjectId[];
   followers: mongoose.Types.ObjectId[];
   collections: mongoose.Types.ObjectId[];
+  firstName: string;
+  lastName: string;
 }
 
 const UserSchema = new Schema({
@@ -46,6 +48,8 @@ const UserSchema = new Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   photo: { type: String, required: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
   prompts: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Prompt",
