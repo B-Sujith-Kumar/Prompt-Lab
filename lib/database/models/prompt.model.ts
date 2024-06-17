@@ -86,14 +86,25 @@ export interface IComment {
   createdAt: Date;
 }
 
+export interface ITag {
+    name: string;
+    _id: string
+}
+
+export interface IUser {
+    username: string;
+    _id: string;
+}
+
 export interface IPrompt {
   title: string;
   description: string;
   content: string;
   createdAt: Date;
   thumbnail?: string;
-  author: mongoose.Types.ObjectId;
-  tags: string[];
+//   author: mongoose.Types.ObjectId | {username: string, _id: string};
+  author: IUser;
+  tags: ITag[];
   likes: mongoose.Types.ObjectId[];
   comments: IComment[];
   platform: string[];

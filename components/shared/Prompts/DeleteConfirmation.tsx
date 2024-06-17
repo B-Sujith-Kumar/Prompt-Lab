@@ -20,7 +20,7 @@ import { deletePrompt } from "@/lib/actions/prompts.actions";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const DeleteConfirmation = ({ promptId }: { promptId: string }) => {
+const DeleteConfirmation = ({ promptId }: { promptId: string | undefined }) => {
   const pathname = usePathname();
   let [isPending, startTransition] = useTransition();
 

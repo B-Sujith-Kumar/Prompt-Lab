@@ -55,10 +55,10 @@ const Card = ({ prompt }: CardProps) => {
         </p>
         <div className="flex items-center justify-between mt-2">
           <div className="flex gap-2 items-center">
-            {prompt.platform.map((platform) => (
+            {prompt.platform.map((platform: string) => (
               <>
                 <Image
-                  src={aiImages[platform]}
+                  src={aiImages[platform as keyof typeof aiImages]}
                   alt="Image"
                   width={25}
                   className="bg-white rounded-full"
