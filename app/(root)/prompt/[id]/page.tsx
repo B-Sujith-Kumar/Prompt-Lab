@@ -8,7 +8,7 @@ import Link from "next/link";
 
 const page = async ({ params: { id } }: SearchParamProps) => {
   const prompt = await getPromptById(id);
-  console.log(prompt);
+//   console.log(prompt);
   return (
     <div className="md:px-8 max-sm:px-6 pb-6">
       <section className="flex max-md:flex-col max-md:max-w-xl md:max-w-7xl mx-auto gap-8  mt-10   font-worksans text-white md:items-center md:gap-10">

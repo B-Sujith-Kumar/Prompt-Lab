@@ -1,6 +1,6 @@
 "use server"
 
-import { createPromptParams } from "@/types"
+import { GetAllPromptParams, createPromptParams } from "@/types"
 import { handleError } from "../utils"
 import { connectToDatabase } from "../database"
 import User from "../database/models/user.model"
@@ -8,6 +8,7 @@ import Prompt from "../database/models/prompt.model"
 import Collection from "../database/models/collection.model"
 import mongoose from "mongoose"
 import Tag from "../database/models/tags.models"
+import { revalidatePath } from "next/cache"
 
 const populatePrompt = async(query: any) => {
     return query
@@ -83,6 +84,57 @@ export const getPromptById = async (id: string) => {
             throw new Error("Prompt not found");
         }
         return JSON.parse(JSON.stringify(prompt));
+    } catch (err) {
+        handleError(err);
+    }
+}
+
+export const getAllPrompts = async ({query, limit = 6, page, category} : GetAllPromptParams) => {
+    try {
+       await connectToDatabase();
+        const conditions = {};
+        const promptsQuery = Prompt.find(conditions).sort({ createdAt: 'desc' }).skip(0).limit(limit);
+        const prompts = await populatePrompt(promptsQuery);
+        const promptCount = await Prompt.countDocuments(conditions);
+        return {
+            data: JSON.parse(JSON.stringify(prompts)),
+            totalPages: Math.ceil(promptCount / limit),
+        };
+    } catch (err) {
+        handleError(err);
+    }
+}
+
+export const deletePrompt = async ({promptId, path} : {promptId: string, path: string}) => {
+    try {
+        await connectToDatabase();
+        const prompt = await Prompt.findById(promptId);
+        if (!prompt) {
+            throw new Error("Prompt not found");
+        }
+        const deletedPrompt = await Prompt.findByIdAndDelete(promptId);
+        const author = await User.findById(prompt.author);
+        if (!author) {
+            throw new Error("Author not found");
+        }
+        author.prompts = author.prompts.filter((id : string) => id.toString() !== promptId);
+        author.favorites = author.favorites.filter((id : string) => id.toString() !== promptId);
+        await author.save();
+        const collection = await Collection.findById(prompt.collection);
+        if (!collection) {
+            throw new Error("Collection not found");
+        }
+        collection.prompts = collection.prompts.filter((id : string) => id.toString() !== promptId);
+        await collection.save();
+        for (const tag of prompt.tags) {
+            const tagModel = await Tag.findById(tag);
+            if (!tagModel) {
+                throw new Error("Tag not found");
+            }
+            tagModel.prompts = tagModel.prompts.filter((id : string) => id.toString() !== promptId);
+            await tagModel.save();
+        }
+        if (deletedPrompt) revalidatePath(path);
     } catch (err) {
         handleError(err);
     }

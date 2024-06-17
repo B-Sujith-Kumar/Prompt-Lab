@@ -13,3 +13,12 @@ export const aiLogos = [
   { src: notion, alt: "Notion AI" },
   { src: stablediff, alt: "Stable Diffusion" },
 ];
+
+export const aiImages = {
+    "ChatGPT": chatgpt,
+    "Leonardo AI": leonardo,
+    "Midjourney": midjourney,
+    "Bard": bard,
+    "Notion AI": notion,
+    "Stable Diffusion": stablediff,
+};

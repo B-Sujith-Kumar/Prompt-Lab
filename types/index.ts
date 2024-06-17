@@ -34,3 +34,11 @@ export type SearchParamProps = {
   params: { id: string };
   searchParams: { [key: string]: string | string[] | undefined };
 };
+
+export type GetAllPromptParams = {
+    page: number;
+    limit: number;
+    collectionType: string;
+    category: string;
+    query: string;
+}

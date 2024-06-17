@@ -96,7 +96,9 @@ export interface IPrompt {
   tags: string[];
   likes: mongoose.Types.ObjectId[];
   comments: IComment[];
-  collection?: mongoose.Types.ObjectId; 
+  platform: string[];
+  collection?: mongoose.Types.ObjectId;
+  _id?: string;
 }
 
 const PromptSchema = new Schema(
@@ -125,7 +127,7 @@ const PromptSchema = new Schema(
       ref: "User",
       required: true,
     },
-    tags: [{ type: Schema.Types.ObjectId, ref: "Tag"}],
+    tags: [{ type: Schema.Types.ObjectId, ref: "Tag" }],
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
     comments: [
       {

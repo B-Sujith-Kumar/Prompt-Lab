@@ -9,6 +9,7 @@ export interface ICollection extends Document {
 }
 
 const CollectionSchema = new Schema(
+
   {
     name: {
       type: String,
@@ -31,7 +32,7 @@ const CollectionSchema = new Schema(
       default: Date.now,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Collection =

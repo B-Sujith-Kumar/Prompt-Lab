@@ -48,10 +48,10 @@ const Hero = () => {
           </div>
         </div>
       </section>
-      <section id="#prompts" className="md:mt-8">
+      <section className="md:mt-8">
         <div className="pl-32 max-[1130px]:pl-12 max-md:px-4">
           <h2 className="text-white text-2xl font-montserrat leading-normal font-bold max-lg:text-2xl  max-md:text-2xl max-md:leading-relaxed max-sm:text-2xl max-sm:leading-relaxed">
-            Explore prompts from different platforms
+            Recently added prompts
           </h2>
         </div>
       </section>

@@ -6,6 +6,7 @@ import Collection from "../database/models/collection.model";
 import { handleError } from "../utils";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
+import User from "../database/models/user.model";
 
 type createCollectionProps = {
   collectionName: string;
@@ -32,6 +33,10 @@ export const createCollection = async ({
         )
       ),
     });
+
+    const author = await User.findById(userDetails?.publicMetadata.userId);
+    author.collections.push(newCollection._id);
+    await author.save();
 
     return JSON.parse(JSON.stringify(newCollection));
   } catch (error) {

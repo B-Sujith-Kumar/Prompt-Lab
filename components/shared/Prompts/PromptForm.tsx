@@ -27,6 +27,7 @@ import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useUploadThing } from "@/lib/uploadthing";
 import { useRouter } from "next/navigation";
 import { createPrompt } from "@/lib/actions/prompts.actions";
+import { revalidatePath } from "next/cache";
 
 type PromptForm = {
   userId: string;
