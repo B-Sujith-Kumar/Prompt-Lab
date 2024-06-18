@@ -157,3 +157,13 @@ export const getRelatedPrompts = async ({prompt, limit = 6} : {prompt: IPrompt, 
         console.log(err)
     }
 }
+
+export const getPromptsByUser = async (id: string) => {
+    try {
+        await connectToDatabase();
+        const prompts = await populatePrompt(Prompt.find({ author: id }));
+        return JSON.parse(JSON.stringify(prompts));
+    } catch (err) {
+        handleError(err);
+    }
+}

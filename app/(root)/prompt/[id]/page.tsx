@@ -60,7 +60,7 @@ const page = async ({ params: { id } }: SearchParamProps) => {
         </div>
       </section>
       <PromptContainer prompt={prompt.content} />
-      <section className="my-8 flex flex-col max-md:max-w-xl md:max-w-7xl max-w-7xl mx-auto gap-4 md:gap-12 text-white font-worksans">
+      <section className="my-8 flex flex-col max-md:max-w-xl md:max-w-7xl max-w-7xl mx-auto gap-4 md:gap-4 text-white font-worksans">
         <h2 className="font-montserrat text-2xl font-semibold">
           Related Prompts
         </h2>
