@@ -93,8 +93,19 @@ export const getPromptById = async (id: string) => {
 export const getAllPrompts = async ({query, limit = 6, page, tag} : GetAllPromptParams) => {
     try {
        await connectToDatabase();
+       let tagCondition = {};
+       if (tag) {
+           const tagId = await getIdTagByName(tag);
+           if (tagId) {
+              tagCondition = { tags: { $in: [tagId] } };
+           } else {
+				return {
+					data: [],
+					totalPages: 0,
+				}	
+		   }
+       }
         const titleCondition = query ? { title: { $regex: query, $options: 'i' } } : {};
-        const tagCondition = tag ? { tags: { $in: [tag] } } : {};
         const conditions = {
             $and: [
                 titleCondition,
@@ -108,6 +119,19 @@ export const getAllPrompts = async ({query, limit = 6, page, tag} : GetAllPrompt
             data: JSON.parse(JSON.stringify(prompts)),
             totalPages: Math.ceil(promptCount / limit),
         };
+    } catch (err) {
+        handleError(err);
+    }
+}
+
+export const getIdTagByName = async (name: string) => {
+    try {
+        await connectToDatabase();
+        const tag = await Tag.findOne({ name });
+        if (!tag) {
+			return null; 
+		}
+        return tag._id;
     } catch (err) {
         handleError(err);
     }

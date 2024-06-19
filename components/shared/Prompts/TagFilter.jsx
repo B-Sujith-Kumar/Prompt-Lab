@@ -1,47 +1,48 @@
-"use client";
+"use client"
 
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input"
 import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter, useSearchParams } from "next/navigation";
+import { faMagnifyingGlass, faTag } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const Search = () => {
-  const [query, setQuery] = useState("");
+const TagFilter = () => {
+    const [tag, setTag] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
   useEffect(() => {
     let newUrl = ""
     const delayDebounceFn = setTimeout(() => {
-        if (query) {
+        if (tag) {
             newUrl = formUrlQuery({
                 params: searchParams.toString(),
-                key: "query",
-                value: query,
+                key: "tag",
+                value: tag,
             });
         } else {
             newUrl = removeKeysFromQuery({
                 params: searchParams.toString(),
-                keysToRemove: ["query"],
+                keysToRemove: ["tag"],
             });
         }
         router.push(newUrl, {scroll: false});
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [query, searchParams, router])
+  }, [tag, searchParams, router])
   return (
     <div className="flex gap-2 items-center max-h-[50px] mt-4 w-full overflow-hidden rounded-full bg-gray-800 px-6 py-2">
-      <FontAwesomeIcon icon={faMagnifyingGlass} />
+      <FontAwesomeIcon icon={faTag} />
       <Input
         type="text"
-        placeholder="Enter title..."
-        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Enter tag..."
+        onChange={(e) => setTag(e.target.value)}
         className="border-0 bg-gray-800 outline-offset-0 placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 text-lg"
       />
     </div>
-  );
-};
+  )
+}
 
-export default Search;
+export default TagFilter
