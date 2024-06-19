@@ -43,6 +43,17 @@ export type GetAllPromptParams = {
   page: number;
   limit: number;
   collectionType: string;
-  category: string;
+  tag: string;
   query: string;
 };
+
+export type UrlQueryParams = {
+  params: string;
+  key: string;
+  value: string | null;
+};
+
+export type RemoveUrlQueryParams = {
+    params: string
+    keysToRemove: string[]
+  }

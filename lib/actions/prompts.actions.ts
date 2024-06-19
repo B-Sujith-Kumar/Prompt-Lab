@@ -90,10 +90,17 @@ export const getPromptById = async (id: string) => {
     }
 }
 
-export const getAllPrompts = async ({query, limit = 6, page, category} : GetAllPromptParams) => {
+export const getAllPrompts = async ({query, limit = 6, page, tag} : GetAllPromptParams) => {
     try {
        await connectToDatabase();
-        const conditions = {};
+        const titleCondition = query ? { title: { $regex: query, $options: 'i' } } : {};
+        const tagCondition = tag ? { tags: { $in: [tag] } } : {};
+        const conditions = {
+            $and: [
+                titleCondition,
+                tagCondition,
+            ]
+        };
         const promptsQuery = Prompt.find(conditions).sort({ createdAt: 'desc' }).skip(0).limit(limit);
         const prompts = await populatePrompt(promptsQuery);
         const promptCount = await Prompt.countDocuments(conditions);
