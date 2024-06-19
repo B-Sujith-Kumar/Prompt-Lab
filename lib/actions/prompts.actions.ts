@@ -183,27 +183,30 @@ export const updatePrompt = async ({prompt, userId, id} : {prompt: any, userId: 
             throw new Error("Prompt not found");
         }
         const tagDocs = await Tag.find({ name: { $in: tags } });
-        const newTagIds = tagDocs.map(tag => tag._id);
-        const oldTagIds = getPrompt.tags;
+        const newTagIds = tagDocs.map(tag => tag._id.toString());
+        const oldTagIds = getPrompt.tags.map((tag : mongoose.Types.ObjectId) => tag.toString());
         getPrompt.title = title;
         getPrompt.description = description;
         getPrompt.content = content;
         getPrompt.thumbnail = thumbnail;
         getPrompt.platform = platform;
-        // getPrompt.collection = collection;
-        const tagsToRemove = oldTagIds.filter((tagId: mongoose.Types.ObjectId) => !newTagIds.includes(tagId));
-        const tagsToAdd = newTagIds.filter((tagId: mongoose.Types.ObjectId) => !oldTagIds.includes(tagId));
-        console.log("Promp tags : ", getPrompt.tags);
-        console.log("Tags to remove : ", tagsToRemove);
-        console.log("Tags to add : ", tagsToAdd);
-        // await Tag.updateMany({ _id: { $in: tagsToRemove } }, { $pull: { prompts: id } });
-        // await Tag.updateMany({ _id: { $in: tagsToAdd } }, { $push: { prompts: id } });
-        // getPrompt.tags = newTagIds;
         if (getPrompt.collection && getPrompt.collection.toString() !== collection) {
             await Collection.findByIdAndUpdate(getPrompt.collection, { $pull: { prompts: id } });
             await Collection.findByIdAndUpdate(collection, { $push: { prompts: id } });
         }
         getPrompt.collection = collection;
+
+        await Tag.updateMany(
+            { _id: { $in: oldTagIds } },
+            { $pull: { prompts: id } }
+        );
+
+        getPrompt.tags = newTagIds.map(tag => new mongoose.Types.ObjectId(tag));
+
+        await Tag.updateMany(
+            { _id: { $in: newTagIds } },
+            { $push: { prompts: id } }
+        );
 
         await getPrompt.save();
 
