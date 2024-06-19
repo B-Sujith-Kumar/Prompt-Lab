@@ -4,9 +4,12 @@ import { Button } from "@/components/ui/button";
 import { getAllPrompts, getPromptsByUser } from "@/lib/actions/prompts.actions";
 import { getUserData } from "@/lib/actions/user.actions";
 import { SearchParamProps } from "@/types";
+import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 
 const page = async ({ params: { id } }: SearchParamProps) => {
+  const { sessionClaims } = auth();
+  const userId: any = sessionClaims?.userId as string;
   const userData = await getUserData({ id });
   //   console.log(userData);
   const prompts = await getPromptsByUser(id);
@@ -31,9 +34,11 @@ const page = async ({ params: { id } }: SearchParamProps) => {
                 @{userData.username}
               </h1>
             </div>
-            <button className="bg-btn-primary py-2 max-sm:rounded-xl rounded-sm max-sm:w-full sm:px-20">
-              Follow
-            </button>
+            {userId !== id && (
+              <button className="bg-btn-primary py-2 max-sm:rounded-xl rounded-sm max-sm:w-full sm:px-20">
+                Follow
+              </button>
+            )}
           </div>
           <div className="flex justify-between sm:hidden">
             <div className="flex flex-col gap-1">
@@ -76,7 +81,9 @@ const page = async ({ params: { id } }: SearchParamProps) => {
         </div>
       </div>
       <div className="mt-10 border-t-[0.5px] border-t-slate-500">
-        <h1 className="text-2xl font-semibold font-montserrat pt-8 text-center">Prompts</h1>
+        <h1 className="text-2xl font-semibold font-montserrat pt-8 text-center">
+          Prompts
+        </h1>
         <UserPrompts
           data={prompts}
           emptyTitle="No prompts found"

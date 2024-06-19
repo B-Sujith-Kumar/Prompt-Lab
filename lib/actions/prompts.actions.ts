@@ -9,6 +9,7 @@ import Collection from "../database/models/collection.model"
 import mongoose from "mongoose"
 import Tag from "../database/models/tags.models"
 import { revalidatePath } from "next/cache"
+import { Mongoose } from "mongoose"
 
 const populatePrompt = async(query: any) => {
     return query
@@ -164,6 +165,53 @@ export const getPromptsByUser = async (id: string) => {
         const prompts = await populatePrompt(Prompt.find({ author: id }));
         return JSON.parse(JSON.stringify(prompts));
     } catch (err) {
+        handleError(err);
+    }
+}
+
+export const updatePrompt = async ({prompt, userId, id} : {prompt: any, userId: string, id: string}) => {
+    try {
+        await connectToDatabase();
+        const { title, description, content, thumbnail, platform, collection, tags } = prompt;
+        console.log("tags", tags);
+        const author = await User.findById(userId);
+        if (!author) {
+            throw new Error("User not found");
+        }
+        const getPrompt = await Prompt.findById(id);
+        if (!getPrompt) {
+            throw new Error("Prompt not found");
+        }
+        const tagDocs = await Tag.find({ name: { $in: tags } });
+        const newTagIds = tagDocs.map(tag => tag._id);
+        const oldTagIds = getPrompt.tags;
+        getPrompt.title = title;
+        getPrompt.description = description;
+        getPrompt.content = content;
+        getPrompt.thumbnail = thumbnail;
+        getPrompt.platform = platform;
+        // getPrompt.collection = collection;
+        const tagsToRemove = oldTagIds.filter((tagId: mongoose.Types.ObjectId) => !newTagIds.includes(tagId));
+        const tagsToAdd = newTagIds.filter((tagId: mongoose.Types.ObjectId) => !oldTagIds.includes(tagId));
+        console.log("Promp tags : ", getPrompt.tags);
+        console.log("Tags to remove : ", tagsToRemove);
+        console.log("Tags to add : ", tagsToAdd);
+        // await Tag.updateMany({ _id: { $in: tagsToRemove } }, { $pull: { prompts: id } });
+        // await Tag.updateMany({ _id: { $in: tagsToAdd } }, { $push: { prompts: id } });
+        // getPrompt.tags = newTagIds;
+        if (getPrompt.collection && getPrompt.collection.toString() !== collection) {
+            await Collection.findByIdAndUpdate(getPrompt.collection, { $pull: { prompts: id } });
+            await Collection.findByIdAndUpdate(collection, { $push: { prompts: id } });
+        }
+        getPrompt.collection = collection;
+
+        await getPrompt.save();
+
+        revalidatePath(`/prompt/${id}`);
+      
+        return JSON.parse(JSON.stringify(getPrompt));
+    }
+    catch (err) {
         handleError(err);
     }
 }

@@ -2,6 +2,7 @@ import { IPrompt } from "@/lib/database/models/prompt.model";
 import {
   faArrowUpFromBracket,
   faComment,
+  faPenToSquare,
   faTag,
   faThumbsUp,
 } from "@fortawesome/free-solid-svg-icons";
@@ -20,12 +21,13 @@ const Card = ({ prompt }: CardProps) => {
   const userId = sessionClaims?.userId as string;
   const isPromptCreator = prompt.author._id.toString() === userId;
   return (
-    <div className="group relative font-worksans border-[0.7px] flex min-h-[380px] w-full max-w-[400px] flex-col overflow-hidden rounded-xl bg-background shadow-md transition-all hover:shadow-lg md:max-w-68 md:min-h-[350px]">
+    <div className="group relative font-worksans border-[0.7px] flex min-h-[380px] w-full max-w-[400px] flex-col overflow-hidden rounded-xl bg-background shadow-md transition-all hover:shadow-lg md:max-w-68 md:min-h-[350px] ">
       <Link
         href={`/prompt/${prompt._id}`}
         style={{ backgroundImage: `url(${prompt.thumbnail})` }}
         className="flex-center flex-grow bg-gray-50 bg-cover bg-center text-grey-500"
       ></Link>
+      {isPromptCreator && <Link href={`/prompt/update/${prompt._id}`} className="text-gray-500 shadow-lg border-black bg-white px-2 py-1 absolute top-4 right-3 rounded-lg"><FontAwesomeIcon icon={faPenToSquare} /></Link>}
       {isPromptCreator && <DeleteConfirmation promptId={prompt._id} />}
       <Link
         href={`/prompt/${prompt._id}`}

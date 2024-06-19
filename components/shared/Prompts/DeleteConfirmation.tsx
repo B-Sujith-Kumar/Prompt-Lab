@@ -33,7 +33,7 @@ const DeleteConfirmation = ({ promptId }: { promptId: string | undefined }) => {
           width={20}
           height={20}
         /> */}
-        <FontAwesomeIcon icon={faTrash} className="text-red-600 shadow-lg border-black bg-white p-2 absolute top-4 right-3 rounded-lg" />
+        <FontAwesomeIcon icon={faTrash} className="text-red-600 shadow-lg border-black bg-white p-2 absolute top-[54px] right-3 rounded-lg" />
       </AlertDialogTrigger>
 
       <AlertDialogContent className="bg-background text-white font-worksans">
