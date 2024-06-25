@@ -39,7 +39,7 @@ const Comments = ({ userData, prompt, photo, userId }: any) => {
             onChange={(e) => setComment(e.target.value)}
           />
           <div className="flex gap-2 justify-end">
-            <button className={`bg-btn-primary py-1 px-4 rounded-full font-medium ${!comment ? 'cursor-not-allowed' : ''}`} disabled={!comment}
+            <button className={`bg-btn-primary mt-2 py-1 px-4 rounded-full font-medium ${!comment ? 'cursor-not-allowed' : ''}`} disabled={!comment}
             onClick={handleSubmit}>
               Post
             </button>
