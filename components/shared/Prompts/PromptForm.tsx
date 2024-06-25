@@ -388,7 +388,7 @@ const PromptForm = ({ userId, type }: PromptFormProps) => {
     collection: "",
   };
 
-  const form = useForm<z.infer<typeof promptFormSchema>>({
+  const form: any = useForm<z.infer<typeof promptFormSchema>>({
     resolver: zodResolver(promptFormSchema),
     defaultValues: initialValues,
   });

@@ -30,6 +30,6 @@ export const promptFormSchema = z.object({
   description: z.string().min(3, "Description must be at least 3 characters"),
   content: z.string().min(3, "Content must be at least 3 characters"),
   thumbnail: z.string(),
-  tags: z.string().optional(),
+  tags: z.array(z.string()).optional(),
   collection: z.string().nonempty("Add a collection"),
 });
