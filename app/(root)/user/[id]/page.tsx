@@ -11,7 +11,7 @@ const page = async ({ params: { id } }: SearchParamProps) => {
   const { sessionClaims } = auth();
   const userId: any = sessionClaims?.userId as string;
   const userData = await getUserData({ id });
-  //   console.log(userData);
+    // console.log(userId);
   const prompts = await getPromptsByUser(id);
   //   console.log(prompts);
   return (

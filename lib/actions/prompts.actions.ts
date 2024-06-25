@@ -9,7 +9,6 @@ import Collection from "../database/models/collection.model"
 import mongoose from "mongoose"
 import Tag from "../database/models/tags.models"
 import { revalidatePath } from "next/cache"
-import { Mongoose } from "mongoose"
 
 const populatePrompt = async(query: any) => {
     return query
@@ -249,3 +248,38 @@ export const updatePrompt = async ({prompt, userId, id} : {prompt: any, userId: 
         handleError(err);
     }
 }
+
+export const likePrompt = async ({ promptId, userId }: { promptId: string, userId: string }) => {
+    try {
+      await connectToDatabase();
+      const prompt = await Prompt.findById(promptId);
+      if (!prompt) {
+        throw new Error("Prompt not found");
+      }
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+  
+      if (user.favorites.includes(new mongoose.Types.ObjectId(promptId))) {
+        user.favorites = user.favorites.filter((id: string) => id.toString() !== promptId);
+      } else {
+        user.favorites.push(new mongoose.Types.ObjectId(promptId));
+      }
+  
+      if (prompt.likes.includes(new mongoose.Types.ObjectId(userId))) {
+        prompt.likes = prompt.likes.filter((id: string) => id.toString() !== userId);
+      } else {
+        prompt.likes.push(new mongoose.Types.ObjectId(userId));
+      }
+  
+      await user.save();
+      await prompt.save();
+  
+      revalidatePath(`/prompt/${promptId}`);
+  
+      return JSON.parse(JSON.stringify(prompt));
+    } catch (err) {
+      handleError(err);
+    }
+  };

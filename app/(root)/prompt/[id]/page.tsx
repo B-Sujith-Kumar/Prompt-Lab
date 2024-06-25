@@ -1,6 +1,7 @@
 import PromptContainer from "@/components/shared/Prompts/PromptContainer";
 import RecentlyAdded from "@/components/shared/Prompts/RecentlyAdded";
 import RelatedPrompts from "@/components/shared/Prompts/RelatedPrompts";
+import { auth } from "@clerk/nextjs";
 import {
   getPromptById,
   getRelatedPrompts,
@@ -8,13 +9,24 @@ import {
 import { IPrompt } from "@/lib/database/models/prompt.model";
 import { aiImages } from "@/lib/exports";
 import { SearchParamProps } from "@/types";
-import { faCircleXmark, faTag } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleXmark,
+  faComment,
+  faTag,
+  faThumbsUp,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
+import { getUserData } from "@/lib/actions/user.actions";
+import { Button } from "@/components/ui/button";
+import DetailsBar from "@/components/shared/Prompts/DetailsBar";
 
 const page = async ({ params: { id } }: SearchParamProps) => {
+  const { sessionClaims } = auth();
+  const userId: any = sessionClaims?.userId as string;
   const prompt: IPrompt = await getPromptById(id);
+  const userData = await getUserData({ id: prompt.author._id });
   const relatedPrompts = await getRelatedPrompts({ prompt, limit: 6 });
   return (
     <div className="md:px-8 max-sm:px-6 pb-6">
@@ -72,7 +84,16 @@ const page = async ({ params: { id } }: SearchParamProps) => {
           </div>
         </div>
       </section>
+     <DetailsBar userData={userData} prompt={prompt} userId={userId} />
       <PromptContainer prompt={prompt.content} />
+      <section
+        id="comments"
+        className="max-md:max-w-xl md:max-w-7xl max-w-7xl mx-auto gap-4 md:gap-4 text-white font-worksans"
+      >
+        <h1 className="text-white font-montserrat pt-8 text-2xl font-semibold">
+          {prompt.comments.length} Comments
+        </h1>
+      </section>
       <section className="my-8 flex flex-col max-md:max-w-xl md:max-w-7xl max-w-7xl mx-auto gap-4 md:gap-4 text-white font-worksans">
         <h2 className="font-montserrat text-2xl font-semibold">
           Related Prompts
