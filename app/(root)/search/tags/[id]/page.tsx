@@ -20,12 +20,12 @@ const page = async ({ params: { id } }: SearchParamProps) => {
       <h1 className="text-3xl font-montserrat mt-8 font-semibold tracking-wide">
         {tag} Prompts
       </h1>
-      <p className="text-slate-400 mt-6 text-lg max-md:text-base">
-        Unlock your creativity with free {tag} prompts on PromptPal. Browse our
+      <p className="text-slate-400 mt-4 text-lg max-md:text-base max-sm:leading-relaxed">
+        Unlock your creativity with free {tag} prompts on PromptLab. Browse our
         large catalogue of {tag} prompts and get inspired and more productive
         today.
       </p>
-      <div className="mt-10">
+      <div className="mt-4">
         <SearchPrompts
           data={prompts}
           emptyTitle="No prompts found"

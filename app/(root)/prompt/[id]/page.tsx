@@ -89,12 +89,14 @@ const page = async ({ params: { id } }: SearchParamProps) => {
           <div className="flex gap-2 items-center mt-6">
             {prompt.platform.map((platform: string) => (
               <>
+              <Link href={`/search/platform/${platform}`}>
                 <Image
                   src={aiImages[platform as keyof typeof aiImages]}
                   alt="Image"
                   width={30}
                   className="bg-white rounded-full p-[2px]"
                 />
+                </Link>
               </>
             ))}
           </div>

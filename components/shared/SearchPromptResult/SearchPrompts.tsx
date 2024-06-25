@@ -32,7 +32,7 @@ const SearchPrompts = ({
           </div>
         </div>
       ) : (
-        <div className="font-worksans text-white mt-7 pl-32  max-[1130px]:pl-12 max-[1130px]:pr-12 lg:pr-12 max-md:px-4 text-center">
+        <div className="font-worksans text-white mt-7 text-center w-full">
           <div className="bg-gray-800 py-4 rounded-xl">
             <h1 className="text-2xl capitalize font-semibold">{emptyTitle}</h1>
             <p className="mt-4 text-gray-300">{emptyStateSubtext}</p>

@@ -421,6 +421,23 @@ export const getAllPromptByTagId = async (tagId: string) => {
   }
 };
 
+export const getAllPromptsByPlatform = async (platform?: string) => {
+  try {
+    await connectToDatabase();
+    const prompts = await Prompt.find({ platform })
+      .populate("author", "username _id")
+      .populate("tags", "name _id")
+      .populate("likes", "username _id")
+      .populate({
+        path: "comments",
+        populate: { path: "author", select: "username _id" },
+      });
+    return JSON.parse(JSON.stringify(prompts));
+  } catch (err) {
+    handleError(err);
+  }
+};
+
 export const getNameTag = async (tagId: string) => {
   try {
     await connectToDatabase();

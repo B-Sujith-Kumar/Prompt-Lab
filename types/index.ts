@@ -35,7 +35,7 @@ export type createPromptParams = {
 };
 
 export type SearchParamProps = {
-  params: { id: string };
+  params: { id: string, name?: string };
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
