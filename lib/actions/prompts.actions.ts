@@ -23,7 +23,6 @@ const populatePrompt = async(query: any) => {
 export const createPrompt = async ({prompt, userId, path} : createPromptParams) => {
     try {
         await connectToDatabase();
-        console.log(prompt, userId);
         const author = await User.findById(userId);
         let tags = [];
         if (prompt.tags) {
@@ -44,7 +43,6 @@ export const createPrompt = async ({prompt, userId, path} : createPromptParams) 
             throw new Error("User not found");
         }
 
-        console.log(finalPrompt);
 
         const newPrompt = await Prompt.create({
             ...finalPrompt,
@@ -203,7 +201,6 @@ export const updatePrompt = async ({prompt, userId, id} : {prompt: any, userId: 
     try {
         await connectToDatabase();
         const { title, description, content, thumbnail, platform, collection, tags } = prompt;
-        console.log("tags", tags);
         const author = await User.findById(userId);
         if (!author) {
             throw new Error("User not found");
@@ -283,3 +280,41 @@ export const likePrompt = async ({ promptId, userId }: { promptId: string, userI
       handleError(err);
     }
   };
+
+export const addComment = async ({ promptId, userId, comment }: 
+    { promptId: string, userId: string, comment: string }) => {
+    try {
+        await connectToDatabase();
+        const prompt = await Prompt.findById(promptId);
+        if (!prompt) {
+            throw new Error("Prompt not found");
+        }
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new Error("User not found");
+        }
+        prompt.comments.push({ author: new mongoose.Types.ObjectId(userId), content: comment });
+        await prompt.save();
+        revalidatePath(`/prompt/${promptId}`);
+        return JSON.parse(JSON.stringify(prompt));
+    } catch (err) {
+        handleError(err);
+    }
+}
+
+export const getAllComments = async (promptId: string) => {
+    try {
+        await connectToDatabase();
+        const prompt = await Prompt.findById(promptId).populate({
+            path: "comments.author",
+            model: User,
+            select: "_id username photo",
+        });
+        if (!prompt) {
+            throw new Error("Prompt not found");
+        }
+        return prompt.comments;
+    } catch (err) {
+        handleError(err);
+    }
+}

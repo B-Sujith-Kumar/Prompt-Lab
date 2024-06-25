@@ -81,7 +81,7 @@
 import mongoose, { Schema, models, Document } from "mongoose";
 
 export interface IComment {
-  user: mongoose.Types.ObjectId;
+  author: mongoose.Types.ObjectId;
   content: string;
   createdAt: Date;
 }
@@ -142,9 +142,10 @@ const PromptSchema = new Schema(
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
     comments: [
       {
-        user: {
+        author: {
           type: Schema.Types.ObjectId,
           ref: "User",
+          required: true
         },
         content: {
           type: String,

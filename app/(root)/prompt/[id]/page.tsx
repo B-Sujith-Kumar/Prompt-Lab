@@ -3,6 +3,7 @@ import RecentlyAdded from "@/components/shared/Prompts/RecentlyAdded";
 import RelatedPrompts from "@/components/shared/Prompts/RelatedPrompts";
 import { auth } from "@clerk/nextjs";
 import {
+    getAllComments,
   getPromptById,
   getRelatedPrompts,
 } from "@/lib/actions/prompts.actions";
@@ -21,12 +22,25 @@ import Link from "next/link";
 import { getUserData } from "@/lib/actions/user.actions";
 import { Button } from "@/components/ui/button";
 import DetailsBar from "@/components/shared/Prompts/DetailsBar";
+import Comments from "@/components/shared/Prompts/Comments";
+
+const getUserImage = async (id: string) => {
+  const userData = await getUserData({ id });
+  return userData.photo;
+};
+
+const getComments = async (id: string) => {
+    const comments = await getAllComments(id);
+    return comments
+}
 
 const page = async ({ params: { id } }: SearchParamProps) => {
   const { sessionClaims } = auth();
   const userId: any = sessionClaims?.userId as string;
   const prompt: IPrompt = await getPromptById(id);
   const userData = await getUserData({ id: prompt.author._id });
+  const userImage = await getUserImage(userId);
+  const comments = await getComments(id);
   const relatedPrompts = await getRelatedPrompts({ prompt, limit: 6 });
   return (
     <div className="md:px-8 max-sm:px-6 pb-6">
@@ -84,7 +98,7 @@ const page = async ({ params: { id } }: SearchParamProps) => {
           </div>
         </div>
       </section>
-     <DetailsBar userData={userData} prompt={prompt} userId={userId} />
+      <DetailsBar userData={userData} prompt={prompt} userId={userId} />
       <PromptContainer prompt={prompt.content} />
       <section
         id="comments"
@@ -93,6 +107,27 @@ const page = async ({ params: { id } }: SearchParamProps) => {
         <h1 className="text-white font-montserrat pt-8 text-2xl font-semibold">
           {prompt.comments.length} Comments
         </h1>
+        <Comments userData={userData} prompt={prompt} photo={userImage} userId={userId}/>
+        {
+            comments && comments.map((comment: any) => (
+                <div className="flex gap-4 mt-4 items-center mb-10">
+                    <Link href={`/user/${comment.author._id}`}>
+                    <Image
+                        src={comment.author.photo}
+                        width={50}
+                        height={50}
+                        alt="profile pic"
+                        className="rounded-full hover:cursor-pointer"
+                        />
+                        </Link>
+                    <div className="w-full flex flex-col gap-2">
+                        <Link href={`/user/${comment.author._id}`} className="text-white font-montserrat font-medium hover:cursor-pointer gap-4 text-sm">@ {comment.author.username}
+                        </Link>
+                        <p className="text-white text-sm">{comment.content}</p>
+                    </div>
+                </div>
+            ))
+        }
       </section>
       <section className="my-8 flex flex-col max-md:max-w-xl md:max-w-7xl max-w-7xl mx-auto gap-4 md:gap-4 text-white font-worksans">
         <h2 className="font-montserrat text-2xl font-semibold">

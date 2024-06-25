@@ -37,7 +37,7 @@ const DetailsBar = ({ userData, prompt, userId }: any) => {
     <div className="mt-8 max-md:max-w-xl md:max-w-7xl max-w-7xl mx-auto gap-4 md:gap-4 text-white font-worksans">
       <div className="flex [816px]:items-center gap-8 justify-between max-[816px]:flex-col">
         <div className="flex gap-8 max-[816px]:gap-0 items-center max-[816px]:w-full max-[816px]:justify-between">
-          <div className="flex gap-3 items-center">
+          <Link href={`/user/${prompt.author._id}`} className="flex gap-3 items-center">
             <Image
               src={userData.photo}
               width={55}
@@ -53,7 +53,7 @@ const DetailsBar = ({ userData, prompt, userId }: any) => {
                 {userData.followers.length} Followers
               </p>
             </div>
-          </div>
+          </Link>
           <div>
             <button className="bg-btn-primary py-2 px-8 rounded-full font-semibold">
               Follow
