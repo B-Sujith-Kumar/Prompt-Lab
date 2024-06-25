@@ -643,7 +643,7 @@ const PromptForm = ({ userId, type }: PromptFormProps) => {
             type="submit"
             className="max-md:w-full text-lg  text-center bg-btn-primary"
           >
-            {form.formState.isSubmitting ? "Submitting..." : `Update Prompt`}
+            {form.formState.isSubmitting ? "Submitting..." : `Upload Prompt`}
           </Button>
         </div>
       </form>
