@@ -20,7 +20,7 @@ export default async function Home({searchParams} : SearchParamProps) {
   return (
     <div className="pb-6">
       <Hero />
-      <div className="flex text-white gap-0 flex-col font-worksans pl-32  max-[1130px]:pl-12 max-[1130px]:pr-12 lg:pr-12 max-md:px-4 sm:flex-row sm:items-centers sm:gap-4">
+      <div className="flex text-white gap-0 flex-col font-worksans pl-32  max-[1130px]:pl-12 max-[1130px]:pr-12 lg:pr-12 max-md:px-4 sm:flex-row sm:items-centers sm:gap-4 mt-4 mb-6">
         <Search />
         <TagFilter />
       </div>
@@ -30,8 +30,8 @@ export default async function Home({searchParams} : SearchParamProps) {
         emptyStateSubtext="Come back later"
         collectionType="All_Prompts"
         limit={6}
-        page={1}
-        totalPages={2}
+        page={page}
+        totalPages={prompts?.totalPages}
       />
     </div>
   );

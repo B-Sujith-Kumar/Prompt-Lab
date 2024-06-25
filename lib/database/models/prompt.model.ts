@@ -174,7 +174,9 @@ const PromptSchema = new Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true,
+    suppressReservedKeysWarning: true
+   }
 );
 
 const Prompt = models.Prompt || mongoose.model<IPrompt>("Prompt", PromptSchema);

@@ -77,7 +77,7 @@ const UserSchema = new Schema({
       default: [],
     },
   ],
-});
+}, {timestamps: true, suppressReservedKeysWarning: true});
 
 const User = models.User || mongoose.model<IUser>("User", UserSchema);
 

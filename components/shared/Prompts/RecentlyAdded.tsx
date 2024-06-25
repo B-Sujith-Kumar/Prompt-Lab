@@ -1,6 +1,7 @@
 import { IPrompt } from "@/lib/database/models/prompt.model";
 import React from "react";
 import Card from "./Card";
+import Pagination from "../Pagination/Pagination";
 
 type CollectionProps = {
   data: IPrompt[];
@@ -8,7 +9,7 @@ type CollectionProps = {
   emptyStateSubtext: string;
   page: number;
   limit: number;
-  totalPages: number;
+  totalPages?: number;
   collectionType: "All_Prompts" | "Related_Prompts" | "My_Prompts";
   urlParamName?: string;
 };
@@ -35,6 +36,7 @@ const RecentlyAdded = ({
                 );
               })}
             </ul>
+            {totalPages > 1 && <Pagination urlParamName={urlParamName} page={page} totalPages={totalPages}/>}
           </div>
         </div>
       ) : (

@@ -6,6 +6,7 @@ import {
   getRelatedPrompts,
 } from "@/lib/actions/prompts.actions";
 import { IPrompt } from "@/lib/database/models/prompt.model";
+import { aiImages } from "@/lib/exports";
 import { SearchParamProps } from "@/types";
 import { faCircleXmark, faTag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,13 +19,13 @@ const page = async ({ params: { id } }: SearchParamProps) => {
   return (
     <div className="md:px-8 max-sm:px-6 pb-6">
       <section className="flex max-md:flex-col max-md:max-w-xl md:max-w-7xl mx-auto gap-8  mt-10   font-worksans text-white md:items-center md:gap-10">
-        <div className="shrink-0">
+        <div className="md:w-[74%] w-full">
           <Image
             src={prompt.thumbnail}
             alt={prompt.title}
-            width={500}
-            height={500}
-            className="rounded-xl md:h-[400px] md:w-[400px]  w-full hover:scale-[1.02] transition-transform duration-300 ease-in-out object-contain md:my-auto  min-h-fit"
+            width={1400}
+            height={549}
+            className="max-h-[549px] w-full object-cover rounded-lg"
           />
         </div>
         <div className="flex flex-col justify-between h-[100%]">
@@ -55,6 +56,18 @@ const page = async ({ params: { id } }: SearchParamProps) => {
                 <FontAwesomeIcon icon={faTag} className="cursor-pointer" />
                 <span className="text-base">{tag.name}</span>
               </div>
+            ))}
+          </div>
+          <div className="flex gap-2 items-center mt-6">
+            {prompt.platform.map((platform: string) => (
+              <>
+                <Image
+                  src={aiImages[platform as keyof typeof aiImages]}
+                  alt="Image"
+                  width={30}
+                  className="bg-white rounded-full p-[2px]"
+                />
+              </>
             ))}
           </div>
         </div>

@@ -24,7 +24,7 @@ const populatePrompt = async(query: any) => {
 export const createPrompt = async ({prompt, userId, path} : createPromptParams) => {
     try {
         await connectToDatabase();
-        // console.log(prompt, userId);
+        console.log(prompt, userId);
         const author = await User.findById(userId);
         let tags = [];
         if (prompt.tags) {
@@ -45,7 +45,7 @@ export const createPrompt = async ({prompt, userId, path} : createPromptParams) 
             throw new Error("User not found");
         }
 
-        // console.log(finalPrompt);
+        console.log(finalPrompt);
 
         const newPrompt = await Prompt.create({
             ...finalPrompt,

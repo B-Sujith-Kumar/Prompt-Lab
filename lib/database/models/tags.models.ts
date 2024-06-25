@@ -24,7 +24,7 @@ const TagSchema = new Schema(
       default: Date.now,
     },
   },
-  { timestamps: true }
+  {timestamps: true, suppressReservedKeysWarning: true}
 );
 
 const Tag = models.Tag || mongoose.model<ITag>("Tag", TagSchema);
