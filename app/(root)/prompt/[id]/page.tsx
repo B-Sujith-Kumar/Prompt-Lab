@@ -23,6 +23,7 @@ import { getUserData } from "@/lib/actions/user.actions";
 import { Button } from "@/components/ui/button";
 import DetailsBar from "@/components/shared/Prompts/DetailsBar";
 import Comments from "@/components/shared/Prompts/Comments";
+import DisplayComments from "@/components/shared/Prompts/DisplayComments";
 
 const getUserImage = async (id: string) => {
   const userData = await getUserData({ id });
@@ -89,13 +90,13 @@ const page = async ({ params: { id } }: SearchParamProps) => {
           <div className="flex gap-2 items-center mt-6">
             {prompt.platform.map((platform: string) => (
               <>
-              <Link href={`/search/platform/${platform}`}>
-                <Image
-                  src={aiImages[platform as keyof typeof aiImages]}
-                  alt="Image"
-                  width={30}
-                  className="bg-white rounded-full p-[2px]"
-                />
+                <Link href={`/search/platform/${platform}`}>
+                  <Image
+                    src={aiImages[platform as keyof typeof aiImages]}
+                    alt="Image"
+                    width={30}
+                    className="bg-white rounded-full p-[2px]"
+                  />
                 </Link>
               </>
             ))}
@@ -117,18 +118,18 @@ const page = async ({ params: { id } }: SearchParamProps) => {
           photo={userImage}
           userId={userId}
         />
-        {comments &&
-          comments.map((comment: any) => (
-            <div className="flex gap-4 mt-4 items-center mb-10">
-              <Link href={`/user/${comment.author._id}`}>
-                <Image
-                  src={comment.author.photo}
-                  width={50}
-                  height={50}
-                  alt="profile pic"
-                  className="rounded-full hover:cursor-pointer"
-                />
-              </Link>
+        {comments.map((comment: any) => (
+          <div className="flex gap-4 mt-4 items-center mb-10" key={comment._id}>
+            <Link href={`/user/${comment.author._id}`}>
+              <Image
+                src={comment.author.photo}
+                width={50}
+                height={50}
+                alt="profile pic"
+                className="rounded-full hover:cursor-pointer"
+              />
+            </Link>
+            <div className="flex justify-between w-full">
               <div className="w-full flex flex-col gap-2">
                 <Link
                   href={`/user/${comment.author._id}`}
@@ -139,7 +140,9 @@ const page = async ({ params: { id } }: SearchParamProps) => {
                 <p className="text-white text-sm">{comment.content}</p>
               </div>
             </div>
-          ))}
+          </div>
+        ))}
+        {/* <DisplayComments comments={comments} promptId={id} /> */}
       </section>
       <section className="my-8 flex flex-col max-md:max-w-xl md:max-w-7xl max-w-7xl mx-auto gap-4 md:gap-4 text-white font-worksans">
         <h2 className="font-montserrat text-2xl font-semibold">

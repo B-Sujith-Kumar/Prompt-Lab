@@ -3,17 +3,62 @@ import UserPrompts from "@/components/shared/Prompts/UserPrompts";
 import { Button } from "@/components/ui/button";
 import { getAllPrompts, getPromptsByUser } from "@/lib/actions/prompts.actions";
 import { getUserData } from "@/lib/actions/user.actions";
+import { connectToDatabase } from "@/lib/database";
+import User from "@/lib/database/models/user.model";
 import { SearchParamProps } from "@/types";
 import { auth } from "@clerk/nextjs";
+import mongoose from "mongoose";
+import { revalidatePath } from "next/cache";
 import Image from "next/image";
+
+const isFollowing = async (userId: string, id: string) => {
+  try {
+    const main = await User.findById(id);
+    const follower = await User.findById(userId);
+    if (main.followers.includes(userId) && follower.following.includes(id)) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const page = async ({ params: { id } }: SearchParamProps) => {
   const { sessionClaims } = auth();
   const userId: any = sessionClaims?.userId as string;
   const userData = await getUserData({ id });
-    // console.log(userId);
   const prompts = await getPromptsByUser(id);
-  //   console.log(prompts);
+  const follower = await isFollowing(userId, id);
+  const handleFollow = async () => {
+    "use server";
+    await connectToDatabase();
+
+    const main = await User.findById(id);
+    const follower = await User.findById(userId);
+
+    if (!main || !follower) {
+      throw new Error("User not found");
+    }
+
+    if (main.followers.includes(userId) && follower.following.includes(id)) {
+      main.followers = main.followers.filter(
+        (user: mongoose.Types.ObjectId) => user.toString() !== userId
+      );
+      follower.following = follower.following.filter(
+        (user: mongoose.Types.ObjectId) => user.toString() !== id
+      );
+    } else {
+      main.followers.push(new mongoose.Types.ObjectId(userId));
+      follower.following.push(new mongoose.Types.ObjectId(id));
+    }
+
+    await main.save();
+    await follower.save();
+    revalidatePath(`/user/${id}`);
+  };
+
   return (
     <div className="font-worksans max-sm:px-8 sm:px-16 text-white pb-8">
       <div className="mt-10 sm:flex sm:items-center sm:gap-6">
@@ -27,7 +72,7 @@ const page = async ({ params: { id } }: SearchParamProps) => {
         <div className="flex flex-col gap-4 mt-4 sm:flex-1 ">
           <div className="flex flex-col sm:flex-row gap-4 sm:justify-between w-full items-center">
             <div className="flex flex-col gap-2">
-              <h1 className="text-2xl text-center">
+              <h1 className="text-2xl max-sm:text-center">
                 {userData.firstName + " " + userData.lastName}
               </h1>
               <h1 className="text-lg max-sm:text-center text-gray-400">
@@ -35,9 +80,11 @@ const page = async ({ params: { id } }: SearchParamProps) => {
               </h1>
             </div>
             {userId !== id && (
-              <button className="bg-btn-primary py-2 max-sm:rounded-xl rounded-sm max-sm:w-full sm:px-20">
-                Follow
-              </button>
+              <form action={handleFollow}>
+                <button className="bg-btn-primary py-2 max-sm:rounded-xl font-medium rounded-lg max-sm:w-full sm:px-20">
+                  {follower ? "Unfollow" : "Follow"}
+                </button>
+              </form>
             )}
           </div>
           <div className="flex justify-between sm:hidden">

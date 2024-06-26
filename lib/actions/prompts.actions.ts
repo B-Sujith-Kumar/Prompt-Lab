@@ -450,3 +450,19 @@ export const getNameTag = async (tagId: string) => {
     handleError(err);
   }
 };
+
+export const deleteComment = async ({ commentId, promptId }: any) => {
+    try {
+        await connectToDatabase();
+        const prompt = await Prompt.findById(promptId);
+        if (!prompt) {
+            throw new Error("Prompt not found");
+        }
+        prompt.comments = prompt.comments.filter((comment: any) => comment._id.toString() !== commentId);
+        await prompt.save();
+        revalidatePath(`/prompt/${promptId}`);
+        return { success: true, message: "Comment deleted successfully" };
+    } catch (err) {
+        handleError(err);
+    }
+}
