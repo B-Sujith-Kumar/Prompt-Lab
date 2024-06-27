@@ -70,3 +70,21 @@ export const getUserData = async ({ id }: { id: string }) => {
     handleError(error);
   }
 };
+
+export const getLikedPrompts = async (id: string) => {
+    try {
+        await connectToDatabase();
+        const user = await User.findById(id);
+        if (!user) throw new Error("User not found");
+        const likedPrompts = await User.findById(id).populate({
+            path: 'favorites',
+            populate: {
+              path: 'author',
+              select: '_id username',
+            },
+          });
+        return JSON.parse(JSON.stringify(likedPrompts));
+    } catch (error) {
+        handleError(error);
+    }
+}

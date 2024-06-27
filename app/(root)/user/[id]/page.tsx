@@ -80,7 +80,7 @@ const page = async ({ params: { id } }: SearchParamProps) => {
               </h1>
             </div>
             {userId !== id && (
-              <form action={handleFollow}>
+              <form action={handleFollow} className="max-sm:w-full">
                 <button className="bg-btn-primary py-2 max-sm:rounded-xl font-medium rounded-lg max-sm:w-full sm:px-20">
                   {follower ? "Unfollow" : "Follow"}
                 </button>
@@ -146,3 +146,4 @@ const page = async ({ params: { id } }: SearchParamProps) => {
 };
 
 export default page;
+

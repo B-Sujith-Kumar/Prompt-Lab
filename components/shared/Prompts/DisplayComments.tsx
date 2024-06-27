@@ -13,7 +13,7 @@ import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { deleteComment } from "@/lib/actions/prompts.actions"; // Ensure correct import path
 
-const DisplayComments = async ({ comments, promptId }: any) => {
+const DisplayComments = ({ comments, promptId }: any) => {
   const [commentList, setCommentList] = useState(comments);
 
   const handleDeleteComment = async (commentId: any) => {
@@ -30,6 +30,7 @@ const DisplayComments = async ({ comments, promptId }: any) => {
       console.error("Error deleting comment:", error);
     }
   };
+  
 
   return (
     commentList &&
@@ -54,18 +55,19 @@ const DisplayComments = async ({ comments, promptId }: any) => {
             </Link>
             <p className="text-white text-sm">{comment.content}</p>
           </div>
-          {/* <DropdownMenu>
+          <DropdownMenu>
             <DropdownMenuTrigger className="hover:cursor-pointer">
               <FontAwesomeIcon icon={faEllipsisVertical} />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="text-white font-worksans bg-background px-2 py-2">
               <DropdownMenuItem
                 className="hover:cursor-pointer hover:bg-gray-500"
+                onClick={() => handleDeleteComment(comment._id)}
               >
-                <button onClick={() => handleDeleteComment(comment._id)}>Delete</button>
+                Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu> */}
+          </DropdownMenu>
         </div>
       </div>
     ))

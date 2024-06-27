@@ -9,6 +9,8 @@ import Collection from "../database/models/collection.model";
 import mongoose from "mongoose";
 import Tag from "../database/models/tags.models";
 import { revalidatePath } from "next/cache";
+import { Resend } from "resend";
+import EmailTemplate from "@/components/shared/Email/EmailTemplate";
 
 const populatePrompt = async (query: any) => {
   return query
@@ -29,9 +31,10 @@ export const createPrompt = async ({
   userId,
   path,
 }: createPromptParams) => {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     await connectToDatabase();
-    const author = await User.findById(userId);
+    const author = await User.findById(userId).populate("followers");
     let tags = [];
     if (prompt.tags) {
       for (const tag of prompt.tags) {
@@ -73,6 +76,9 @@ export const createPrompt = async ({
         await tagModel.save();
       }
     }
+
+    
+
     return JSON.parse(JSON.stringify(newPrompt));
   } catch (err) {
     handleError(err);
@@ -451,18 +457,26 @@ export const getNameTag = async (tagId: string) => {
   }
 };
 
-export const deleteComment = async ({ commentId, promptId }: any) => {
+export const deleteComment = async ({ commentId, promptId }: {commentId: string, promptId: string}) => {
     try {
         await connectToDatabase();
-        const prompt = await Prompt.findById(promptId);
+    
+        const prompt = await Prompt.findByIdAndUpdate(
+          promptId,
+          {
+            $pull: { comments: { _id: new mongoose.Types.ObjectId(commentId) } }
+          },
+          { new: true }
+        );
+    
         if (!prompt) {
-            throw new Error("Prompt not found");
+          throw new Error('Prompt not found');
         }
-        prompt.comments = prompt.comments.filter((comment: any) => comment._id.toString() !== commentId);
-        await prompt.save();
+    
         revalidatePath(`/prompt/${promptId}`);
-        return { success: true, message: "Comment deleted successfully" };
-    } catch (err) {
-        handleError(err);
-    }
-}
+        return { success: true, message: 'Comment deleted successfully' };
+      } catch (err: any) {
+        console.log(err);
+        return { success: false, message: err.message };
+      }
+  };
