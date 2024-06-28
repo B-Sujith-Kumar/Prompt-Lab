@@ -6,12 +6,23 @@ import Link from "next/link";
 import Image from "next/image";
 import { likePrompt } from "@/lib/actions/prompts.actions";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { checkIsFollowing, handleFollow } from "@/lib/actions/user.actions";
 
 const DetailsBar = ({ userData, prompt, userId }: any) => {
   const [likes, setLikes] = useState(prompt.likes.length);
   const [liked, setLiked] = useState(prompt.likes.includes(userId));
+  const [isFollowing, setIsFollowing] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const checkFollowing = async () => {
+      const following: any = await checkIsFollowing(userId, userData._id);
+      setIsFollowing(following);
+    };
+
+    checkFollowing();
+  })
 
   const handleLike = async () => {
     try {
@@ -35,7 +46,10 @@ const DetailsBar = ({ userData, prompt, userId }: any) => {
     <div className="mt-8 max-md:max-w-xl md:max-w-7xl max-w-7xl mx-auto gap-4 md:gap-4 text-white font-worksans">
       <div className="flex [816px]:items-center gap-8 justify-between max-[816px]:flex-col">
         <div className="flex gap-8 max-[816px]:gap-0 items-center max-[816px]:w-full max-[816px]:justify-between">
-          <Link href={`/user/${prompt.author._id}`} className="flex gap-3 items-center">
+          <Link
+            href={`/user/${prompt.author._id}`}
+            className="flex gap-3 items-center"
+          >
             <Image
               src={userData.photo}
               width={55}
@@ -52,15 +66,20 @@ const DetailsBar = ({ userData, prompt, userId }: any) => {
               </p>
             </div>
           </Link>
-          <div>
-            <button className="bg-btn-primary py-2 px-8 rounded-full font-semibold">
-              Follow
-            </button>
-          </div>
+          {userId !== userData._id && (
+            <div>
+                <button className="bg-btn-primary py-2 px-8 rounded-full font-semibold"
+                onClick={() => handleFollow({userId, id: userData._id})}>
+                  {isFollowing ? "Following": "Follow"}
+                </button>
+            </div>
+          )}
         </div>
         <div className="flex gap-4">
           <Button
-            className={`flex gap-2 ${liked ? 'bg-btn-primary' : 'bg-gray-600'} text-lg`}
+            className={`flex gap-2 ${
+              liked ? "bg-btn-primary" : "bg-gray-600"
+            } text-lg`}
             type="button"
             onClick={handleLike}
           >
