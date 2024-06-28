@@ -12,7 +12,6 @@ const DetailsBar = ({ userData, prompt, userId }: any) => {
   const [likes, setLikes] = useState(prompt.likes.length);
   const [liked, setLiked] = useState(prompt.likes.includes(userId));
   const router = useRouter();
-//   console.log(userData, prompt, userId);
 
   const handleLike = async () => {
     try {
@@ -26,7 +25,6 @@ const DetailsBar = ({ userData, prompt, userId }: any) => {
         setLiked(true);
       }
 
-      // You can also refresh the data if needed
       router.refresh();
     } catch (error) {
       console.error("Error liking prompt:", error);

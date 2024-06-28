@@ -12,10 +12,10 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@clerk/nextjs";
+import { auth, useAuth } from "@clerk/nextjs";
 import { getFollowingStatus, toggleFollowStatus } from "@/lib/actions/user.actions";
 
-const FollowDetailsTab = ({ userData }: any) => {
+const FollowDetailsTab = ({ userData, userId }: any) => {
   const [followers, setFollowers]: any = useState<any>(userData.followers);
   const [following, setFollowing]: any = useState<any>(userData.following);
   const [followingStatus, setFollowingStatus] = useState<{ [key: string]: boolean }>({});
@@ -82,12 +82,12 @@ const FollowDetailsTab = ({ userData }: any) => {
                         />
                         <p className="text-lg font-medium truncate">{follower.firstName + " " + follower.lastName}</p>
                       </Link>
-                      <Button
+                      {userId !== follower._id && <Button
                         className="bg-btn-primary"
                         onClick={() => handleFollow(follower._id)}
                       >
                         {followingStatus[follower._id] ? "Following" : "Follow"}
-                      </Button>
+                      </Button>}
                     </div>
                   ))}
                 </DialogDescription>
@@ -121,12 +121,12 @@ const FollowDetailsTab = ({ userData }: any) => {
                         />
                         <p className="text-lg font-medium truncate">{followed.firstName + " " + followed.lastName}</p>
                       </Link>
-                      <Button
+                      {userId !== followed._id && <Button
                         className="bg-btn-primary"
                         onClick={() => handleFollow(followed._id)}
                       >
                         {followingStatus[followed._id] ? "Following" : "Follow"}
-                      </Button>
+                      </Button>}
                     </div>
                   ))}
                 </DialogDescription>
@@ -168,12 +168,12 @@ const FollowDetailsTab = ({ userData }: any) => {
                         />
                         <p className="text-lg font-medium">{follower.firstName + " " + follower.lastName}</p>
                       </Link>
-                      <Button
+                     {userId !== follower._id &&  <Button
                         className="bg-btn-primary"
                         onClick={() => handleFollow(follower._id)}
                       >
                         {followingStatus[follower._id] ? "Following" : "Follow"}
-                      </Button>
+                      </Button>}
                     </div>
                   ))}
                 </DialogDescription>
@@ -207,12 +207,12 @@ const FollowDetailsTab = ({ userData }: any) => {
                       />
                       <p className="text-lg font-medium">{followed.firstName + " " + followed.lastName}</p>
                     </Link>
-                    <Button
+                    {userId !== followed._id && <Button
                       className="bg-btn-primary"
                       onClick={() => handleFollow(followed._id)}
                     >
                       {followingStatus[followed._id] ? "Following" : "Follow"}
-                    </Button>
+                    </Button>}
                   </div>
                 ))}
               </DialogDescription>

@@ -1,8 +1,12 @@
 import RecentlyAdded from "@/components/shared/Prompts/RecentlyAdded";
 import UserPrompts from "@/components/shared/Prompts/UserPrompts";
+import FollowDetailsTab from "@/components/shared/User/FollowDetailsTab";
 import { Button } from "@/components/ui/button";
 import { getAllPrompts, getPromptsByUser } from "@/lib/actions/prompts.actions";
-import { getUserData } from "@/lib/actions/user.actions";
+import {
+  getUserData,
+  getUserDataPopulatedFollows,
+} from "@/lib/actions/user.actions";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/database/models/user.model";
 import { SearchParamProps } from "@/types";
@@ -28,7 +32,7 @@ const isFollowing = async (userId: string, id: string) => {
 const page = async ({ params: { id } }: SearchParamProps) => {
   const { sessionClaims } = auth();
   const userId: any = sessionClaims?.userId as string;
-  const userData = await getUserData({ id });
+  const userData = await getUserDataPopulatedFollows(id);
   const prompts = await getPromptsByUser(id);
   const follower = await isFollowing(userId, id);
   const handleFollow = async () => {
@@ -87,7 +91,7 @@ const page = async ({ params: { id } }: SearchParamProps) => {
               </form>
             )}
           </div>
-          <div className="flex justify-between sm:hidden">
+          {/* <div className="flex justify-between sm:hidden">
             <div className="flex flex-col gap-1">
               <h1 className="text-center text-lg">{userData.prompts.length}</h1>
               <h1 className="text-center text-lg">Prompts</h1>
@@ -104,10 +108,10 @@ const page = async ({ params: { id } }: SearchParamProps) => {
               </h1>
               <h1 className="text-center text-lg">Following</h1>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
-      <div className="flex gap-12  max-sm:hidden mt-10">
+      {/* <div className="flex gap-12  max-sm:hidden mt-10">
         <div className="flex gap-2">
           <h1 className="text-center text-lg font-bold">
             {userData.prompts.length}
@@ -126,6 +130,9 @@ const page = async ({ params: { id } }: SearchParamProps) => {
           </h1>
           <h1 className="text-center text-lg text-gray-300">Following</h1>
         </div>
+      </div> */}
+      <div className="mt-6">
+        <FollowDetailsTab userData={userData} userId={userId} />
       </div>
       <div className="mt-10 border-t-[0.5px] border-t-slate-500">
         <h1 className="text-2xl font-semibold font-montserrat pt-8 text-center">
@@ -146,4 +153,3 @@ const page = async ({ params: { id } }: SearchParamProps) => {
 };
 
 export default page;
-
