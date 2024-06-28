@@ -6,6 +6,7 @@ import { connectToDatabase } from "../database";
 import User from "../database/models/user.model";
 import Prompt from "../database/models/prompt.model";
 import { revalidatePath } from "next/cache";
+import mongoose from "mongoose";
 
 export const createUser = async (user: createUserParams) => {
   try {
@@ -71,6 +72,19 @@ export const getUserData = async ({ id }: { id: string }) => {
   }
 };
 
+export const getUserDataPopulatedFollows = async (id: string) => {
+  try {
+    await connectToDatabase();
+    const user = await User.findById(id).populate({
+      path: "followers following",
+    });
+    if (!user) throw new Error("User not found");
+    return JSON.parse(JSON.stringify(user));
+  } catch (error) {
+    handleError(error);
+  }
+};
+
 export const getLikedPrompts = async (id: string) => {
   try {
     await connectToDatabase();
@@ -93,4 +107,57 @@ export const getLikedPrompts = async (id: string) => {
   } catch (error) {
     handleError(error);
   }
+};
+
+interface GetFollowingStatusParams {
+  currentUserId: string;
+  targetUserId: string;
+}
+
+export const getFollowingStatus = async ({
+  currentUserId,
+  targetUserId,
+}: GetFollowingStatusParams) => {
+  await connectToDatabase();
+
+  const user = await User.findById(currentUserId);
+  const isFollowing = user.following.includes(targetUserId);
+
+  return { isFollowing };
+};
+
+interface ToggleFollowStatusParams {
+  currentUserId: string;
+  targetUserId: string;
+}
+
+export const toggleFollowStatus = async ({
+  currentUserId,
+  targetUserId,
+}: ToggleFollowStatusParams) => {
+  await connectToDatabase();
+
+  const currentUser = await User.findById(currentUserId);
+  const targetUser = await User.findById(targetUserId);
+
+  if (!currentUser || !targetUser) {
+    throw new Error("User not found");
+  }
+
+  if (currentUser.following.includes(targetUserId)) {
+    currentUser.following = currentUser.following.filter(
+      (userId: mongoose.Types.ObjectId) => userId.toString() !== targetUserId
+    );
+    targetUser.followers = targetUser.followers.filter(
+      (userId: mongoose.Types.ObjectId) => userId.toString() !== currentUserId
+    );
+  } else {
+    currentUser.following.push(new mongoose.Types.ObjectId(targetUserId));
+    targetUser.followers.push(new mongoose.Types.ObjectId(currentUserId));
+  }
+
+  await currentUser.save();
+  await targetUser.save();
+
+  return { success: true };
 };

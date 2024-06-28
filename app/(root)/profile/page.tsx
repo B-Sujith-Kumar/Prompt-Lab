@@ -1,8 +1,9 @@
 import RecentlyAdded from "@/components/shared/Prompts/RecentlyAdded";
 import UserPrompts from "@/components/shared/Prompts/UserPrompts";
+import FollowDetailsTab from "@/components/shared/User/FollowDetailsTab";
 import { Button } from "@/components/ui/button";
 import { getAllPrompts, getPromptsByUser } from "@/lib/actions/prompts.actions";
-import { getLikedPrompts, getUserData } from "@/lib/actions/user.actions";
+import { getLikedPrompts, getUserData, getUserDataPopulatedFollows } from "@/lib/actions/user.actions";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/database/models/user.model";
 import { SearchParamProps } from "@/types";
@@ -12,13 +13,13 @@ import { revalidatePath } from "next/cache";
 import Image from "next/image";
 
 
+
 const page = async () => {
   const { sessionClaims } = auth();
   const userId: any = sessionClaims?.userId as string;
-  const userData = await getUserData({ id: userId });
+  const userData = await getUserDataPopulatedFollows(userId);
   const prompts = await getPromptsByUser(userId);
   const likedPrompts = await getLikedPrompts(userId);
-  console.log(likedPrompts.favorites)
 
   return (
     <div className="font-worksans max-sm:px-8 sm:px-16 text-white pb-8">
@@ -41,7 +42,7 @@ const page = async () => {
               </h1>
             </div>
           </div>
-          <div className="flex justify-between sm:hidden">
+          {/* <div className="flex justify-between sm:hidden">
             <div className="flex flex-col gap-1">
               <h1 className="text-center text-lg">{userData.prompts.length}</h1>
               <h1 className="text-center text-lg">Prompts</h1>
@@ -58,10 +59,11 @@ const page = async () => {
               </h1>
               <h1 className="text-center text-lg">Following</h1>
             </div>
-          </div>
+          </div> */}
+          {/* <FollowDetailsTab userData={userData} /> */}
         </div>
       </div>
-      <div className="flex gap-12  max-sm:hidden mt-10">
+      {/* <div className="flex gap-12  max-sm:hidden mt-10">
         <div className="flex gap-2">
           <h1 className="text-center text-lg font-bold">
             {userData.prompts.length}
@@ -80,7 +82,8 @@ const page = async () => {
           </h1>
           <h1 className="text-center text-lg text-gray-300">Following</h1>
         </div>
-      </div>
+      </div> */}
+      <FollowDetailsTab userData={userData} />
       <div className="mt-10 border-t-[0.5px] border-t-slate-500">
         <h1 className="text-2xl font-semibold font-montserrat pt-8 text-center">
           Prompts
@@ -88,7 +91,7 @@ const page = async () => {
         <UserPrompts
           data={prompts}
           emptyTitle="No prompts found"
-          emptyStateSubtext="Come back later"
+          emptyStateSubtext="Create some prompts to see them here"
           collectionType="All_Prompts"
           limit={6}
           page={1}
@@ -102,7 +105,7 @@ const page = async () => {
         <UserPrompts
           data={likedPrompts.favorites}
           emptyTitle="No prompts found"
-          emptyStateSubtext="Come back later"
+          emptyStateSubtext="Like some prompts to see them here"
           collectionType="All_Prompts"
           limit={6}
           page={1}
