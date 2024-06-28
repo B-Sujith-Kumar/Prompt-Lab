@@ -72,7 +72,7 @@ const FollowDetailsTab = ({ userData }: any) => {
                 <DialogDescription className="">
                   {followers.map((follower: any) => (
                     <div key={follower._id} className="flex justify-between items-center mb-4 gap-2">
-                      <div className="flex items-center gap-3">
+                      <Link href={`/user/${follower._id}`} className="flex items-center gap-3">
                         <Image
                           src={follower.photo}
                           alt={follower.username}
@@ -81,7 +81,7 @@ const FollowDetailsTab = ({ userData }: any) => {
                           className="rounded-full"
                         />
                         <p className="text-lg font-medium truncate">{follower.firstName + " " + follower.lastName}</p>
-                      </div>
+                      </Link>
                       <Button
                         className="bg-btn-primary"
                         onClick={() => handleFollow(follower._id)}
@@ -111,7 +111,7 @@ const FollowDetailsTab = ({ userData }: any) => {
                 <DialogDescription className="">
                   {following.map((followed: any) => (
                     <div key={followed._id} className="flex justify-between items-center mb-4 gap-2">
-                      <div className="flex items-center gap-3">
+                      <Link href={`/user/${followed._id}`} className="flex items-center gap-3">
                         <Image
                           src={followed.photo}
                           alt={followed.username}
@@ -120,7 +120,7 @@ const FollowDetailsTab = ({ userData }: any) => {
                           className="rounded-full"
                         />
                         <p className="text-lg font-medium truncate">{followed.firstName + " " + followed.lastName}</p>
-                      </div>
+                      </Link>
                       <Button
                         className="bg-btn-primary"
                         onClick={() => handleFollow(followed._id)}
@@ -158,7 +158,7 @@ const FollowDetailsTab = ({ userData }: any) => {
                 <DialogDescription className="">
                   {followers.map((follower: any) => (
                     <div key={follower._id} className="flex justify-between items-center mb-4">
-                      <div className="flex items-center gap-3">
+                      <Link href={`/user/${follower._id}`} className="flex items-center gap-3">
                         <Image
                           src={follower.photo}
                           alt={follower.username}
@@ -167,7 +167,7 @@ const FollowDetailsTab = ({ userData }: any) => {
                           className="rounded-full"
                         />
                         <p className="text-lg font-medium">{follower.firstName + " " + follower.lastName}</p>
-                      </div>
+                      </Link>
                       <Button
                         className="bg-btn-primary"
                         onClick={() => handleFollow(follower._id)}
@@ -197,7 +197,7 @@ const FollowDetailsTab = ({ userData }: any) => {
               <DialogDescription className="">
                 {following.map((followed: any) => (
                   <div key={followed._id} className="flex justify-between items-center mb-4">
-                    <div className="flex items-center gap-3">
+                    <Link href={`/user/${followed._id}`} className="flex items-center gap-3">
                       <Image
                         src={followed.photo}
                         alt={followed.username}
@@ -206,7 +206,7 @@ const FollowDetailsTab = ({ userData }: any) => {
                         className="rounded-full"
                       />
                       <p className="text-lg font-medium">{followed.firstName + " " + followed.lastName}</p>
-                    </div>
+                    </Link>
                     <Button
                       className="bg-btn-primary"
                       onClick={() => handleFollow(followed._id)}
