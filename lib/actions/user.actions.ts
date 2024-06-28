@@ -12,7 +12,7 @@ export const createUser = async (user: createUserParams) => {
     await connectToDatabase();
     console.log(user);
     const newUser = await User.create(user);
-    console.log(newUser)
+    console.log(newUser);
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
     handleError(error);
@@ -72,19 +72,25 @@ export const getUserData = async ({ id }: { id: string }) => {
 };
 
 export const getLikedPrompts = async (id: string) => {
-    try {
-        await connectToDatabase();
-        const user = await User.findById(id);
-        if (!user) throw new Error("User not found");
-        const likedPrompts = await User.findById(id).populate({
-            path: 'favorites',
-            populate: {
-              path: 'author',
-              select: '_id username',
-            },
-          });
-        return JSON.parse(JSON.stringify(likedPrompts));
-    } catch (error) {
-        handleError(error);
-    }
-}
+  try {
+    await connectToDatabase();
+    const user = await User.findById(id);
+    if (!user) throw new Error("User not found");
+    const likedPrompts = await User.findById(id).populate({
+      path: "favorites",
+      populate: [
+        {
+          path: "author",
+          select: "_id username",
+        },
+        {
+          path: "tags",
+          select: "_id name",
+        },
+      ],
+    });
+    return JSON.parse(JSON.stringify(likedPrompts));
+  } catch (error) {
+    handleError(error);
+  }
+};
