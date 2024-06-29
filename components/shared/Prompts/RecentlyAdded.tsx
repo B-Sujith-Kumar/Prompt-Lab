@@ -28,7 +28,7 @@ const RecentlyAdded = ({
         <div className="text-white mt-4" id="prompts">
           <div className="flex flex-col items-center gap-10 pl-32  max-[1130px]:pl-12 max-[1130px]:pr-12 lg:pr-12 max-md:px-4">
             <ul className="grid w-full mt-4 grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8 xl:grid-cols-3 xl:gap-10">
-              {data.map((prompt) => {
+              {data.slice((page - 1) * 6, page * 6).map((prompt) => {
                 return (
                   <li key={prompt.title} className="flex justify-center">
                     <Card prompt={prompt} />

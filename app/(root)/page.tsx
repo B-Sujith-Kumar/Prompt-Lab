@@ -4,18 +4,18 @@ import Search from "@/components/shared/Prompts/Search";
 import { getAllPrompts } from "@/lib/actions/prompts.actions";
 import { SearchParamProps } from "@/types";
 import React from "react";
-import TagFilter from "@/components/shared/Prompts/TagFilter"
+import TagFilter from "@/components/shared/Prompts/TagFilter";
 
-export default async function Home({searchParams} : SearchParamProps) {
-    const page = Number(searchParams?.page) || 1;
-    const searchText = searchParams?.query as string || '';
-    const tag = searchParams?.tag as string || '';
+export default async function Home({ searchParams }: SearchParamProps) {
+  const page = Number(searchParams?.page) || 1;
+  const searchText = (searchParams?.query as string) || "";
+  const tag = (searchParams?.tag as string) || "";
   const prompts = await getAllPrompts({
     query: searchText,
     page,
     limit: 6,
     collectionType: "All_Prompts",
-    tag
+    tag,
   });
   return (
     <div className="pb-6">

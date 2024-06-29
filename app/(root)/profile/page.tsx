@@ -14,11 +14,13 @@ import Image from "next/image";
 
 
 
-const page = async () => {
+const page = async ({ searchParams }: SearchParamProps) => {
+    const page = Number(searchParams?.page) || 1;
   const { sessionClaims } = auth();
   const userId: any = sessionClaims?.userId as string;
   const userData = await getUserDataPopulatedFollows(userId);
   const prompts = await getPromptsByUser(userId);
+  console.log(prompts.totalPages)
   const likedPrompts = await getLikedPrompts(userId);
 
   return (
@@ -89,13 +91,13 @@ const page = async () => {
           Prompts
         </h1>
         <UserPrompts
-          data={prompts}
+          data={prompts.data}
           emptyTitle="No prompts found"
           emptyStateSubtext="Create some prompts to see them here"
           collectionType="All_Prompts"
           limit={6}
-          page={1}
-          totalPages={2}
+          page={page}
+          totalPages={prompts.totalPages}
         />
       </div>
       <div className="mt-10">
@@ -110,6 +112,7 @@ const page = async () => {
           limit={6}
           page={1}
           totalPages={2}
+          type="liked"
         />
       </div>
     </div>

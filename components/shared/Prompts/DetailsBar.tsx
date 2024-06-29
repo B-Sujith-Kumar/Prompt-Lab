@@ -8,21 +8,34 @@ import { likePrompt } from "@/lib/actions/prompts.actions";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { checkIsFollowing, handleFollow } from "@/lib/actions/user.actions";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const DetailsBar = ({ userData, prompt, userId }: any) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [likes, setLikes] = useState(prompt.likes.length);
   const [liked, setLiked] = useState(prompt.likes.includes(userId));
   const [isFollowing, setIsFollowing] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const checkFollowing = async () => {
+      setIsLoading(true);
       const following: any = await checkIsFollowing(userId, userData._id);
       setIsFollowing(following);
+      setIsLoading(false);
     };
 
     checkFollowing();
-  })
+  }, [userId, userData._id]);
+
+  const handleFollowClick = async () => {
+    setShowSpinner(true);
+    await handleFollow({ userId, id: userData._id });
+    const following: any = await checkIsFollowing(userId, userData._id);
+    setIsFollowing(following);
+    setShowSpinner(false);
+  };
 
   const handleLike = async () => {
     try {
@@ -68,18 +81,25 @@ const DetailsBar = ({ userData, prompt, userId }: any) => {
           </Link>
           {userId !== userData._id && (
             <div>
-                <button className="bg-btn-primary py-2 px-8 rounded-full font-semibold"
-                onClick={() => handleFollow({userId, id: userData._id})}>
-                  {isFollowing ? "Following": "Follow"}
-                </button>
+              <button
+                className="bg-btn-primary py-2 px-8 rounded-full font-semibold"
+                onClick={handleFollowClick}
+                disabled={showSpinner}
+              >
+                {showSpinner ? (
+                  <ClipLoader loading={showSpinner} color="#ffffff" size={20} />
+                ) : isFollowing ? (
+                  "Following"
+                ) : (
+                  "Follow"
+                )}
+              </button>
             </div>
           )}
         </div>
         <div className="flex gap-4">
           <Button
-            className={`flex gap-2 ${
-              liked ? "bg-btn-primary" : "bg-gray-600"
-            } text-lg`}
+            className={`flex gap-2 ${liked ? "bg-btn-primary" : "bg-gray-600"} text-lg`}
             type="button"
             onClick={handleLike}
           >

@@ -127,7 +127,7 @@ export const getAllPrompts = async ({
     const promptsQuery = Prompt.find(conditions)
       .sort({ createdAt: "desc" })
       .skip(0)
-      .limit(limit);
+      .limit(18);
     const prompts = await populatePrompt(promptsQuery);
     const promptCount = await Prompt.countDocuments(conditions);
     return {
@@ -234,6 +234,12 @@ export const getPromptsByUser = async (id: string) => {
   try {
     await connectToDatabase();
     const prompts = await populatePrompt(Prompt.find({ author: id }));
+    const promptCount = await Prompt.countDocuments(prompts);
+    console.log("prompt count : ", promptCount);
+    return {
+      data: JSON.parse(JSON.stringify(prompts)),
+      totalPages: Math.ceil(promptCount / 6),
+    };
     return JSON.parse(JSON.stringify(prompts));
   } catch (err) {
     handleError(err);
