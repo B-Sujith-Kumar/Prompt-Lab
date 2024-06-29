@@ -1,4 +1,5 @@
 import RecentlyAdded from "@/components/shared/Prompts/RecentlyAdded";
+import UserProfilePrompts from "@/components/shared/Prompts/UserProfilePrompts";
 import UserPrompts from "@/components/shared/Prompts/UserPrompts";
 import FollowDetailsTab from "@/components/shared/User/FollowDetailsTab";
 import { Button } from "@/components/ui/button";
@@ -138,14 +139,10 @@ const page = async ({ params: { id } }: SearchParamProps) => {
         <h1 className="text-2xl font-semibold font-montserrat pt-8 text-center">
           Prompts
         </h1>
-        <UserPrompts
-          data={prompts}
+        <UserProfilePrompts
+          data={prompts.data}
           emptyTitle="No prompts found"
           emptyStateSubtext="Come back later"
-          collectionType="All_Prompts"
-          limit={6}
-          page={1}
-          totalPages={2}
         />
       </div>
     </div>
