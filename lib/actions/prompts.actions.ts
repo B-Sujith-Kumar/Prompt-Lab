@@ -77,8 +77,6 @@ export const createPrompt = async ({
       }
     }
 
-    
-
     return JSON.parse(JSON.stringify(newPrompt));
   } catch (err) {
     handleError(err);
@@ -463,26 +461,34 @@ export const getNameTag = async (tagId: string) => {
   }
 };
 
-export const deleteComment = async ({ commentId, promptId }: {commentId: string, promptId: string}) => {
-    try {
-        await connectToDatabase();
-    
-        const prompt = await Prompt.findByIdAndUpdate(
-          promptId,
-          {
-            $pull: { comments: { _id: new mongoose.Types.ObjectId(commentId) } }
-          },
-          { new: true }
-        );
-    
-        if (!prompt) {
-          throw new Error('Prompt not found');
-        }
-    
-        revalidatePath(`/prompt/${promptId}`);
-        return { success: true, message: 'Comment deleted successfully' };
-      } catch (err: any) {
-        console.log(err);
-        return { success: false, message: err.message };
-      }
-  };
+interface DeleteCommentParams {
+  commentId: any;
+  promptId: any;
+}
+
+export const deleteComment = async ({
+  commentId,
+  promptId,
+}: DeleteCommentParams) => {
+  try {
+    await connectToDatabase();
+
+    const prompt = await Prompt.findByIdAndUpdate(
+      promptId,
+      {
+        $pull: { comments: { _id: new mongoose.Types.ObjectId(commentId) } },
+      },
+      { new: true }
+    );
+
+    if (!prompt) {
+      throw new Error("Prompt not found");
+    }
+
+    revalidatePath(`/prompt/${promptId}`);
+    return { success: true, message: "Comment deleted successfully" };
+  } catch (err) {
+    console.error(err);
+    return { success: false, message: "Failed to delete comment" };
+  }
+};
