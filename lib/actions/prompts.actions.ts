@@ -9,7 +9,6 @@ import Collection from "../database/models/collection.model";
 import mongoose from "mongoose";
 import Tag from "../database/models/tags.models";
 import { revalidatePath } from "next/cache";
-import { Resend } from "resend";
 
 const populatePrompt = async (query: any) => {
   return query
@@ -30,7 +29,6 @@ export const createPrompt = async ({
   userId,
   path,
 }: createPromptParams) => {
-  const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     await connectToDatabase();
     const author = await User.findById(userId).populate("followers");
