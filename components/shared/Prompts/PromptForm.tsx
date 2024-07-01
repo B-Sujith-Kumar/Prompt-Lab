@@ -124,7 +124,7 @@ const PromptForm = ({ userId, type }: PromptFormProps) => {
                         username: follower.firstName + " " + follower.lastName,
                         promptTitle: newPrompt.title,
                         promptDescription: newPrompt.description,
-                        promptLink: `http://localhost:3000/prompt/${newPrompt._id}`,
+                        promptLink: `${process.env.NODE_ENV == "development" ? "http://localhost:3000/prompt/" : "https://prompt-lab-two.vercel.app/prompt/"}${newPrompt._id}`,
                         authorName: author.firstName + " " + author.lastName,
                     }),
                 })
