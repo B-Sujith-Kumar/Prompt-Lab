@@ -7,7 +7,7 @@ interface EmailTemplateProps {
   promptLink: string;
 }
 
-const EmailTemplate: React.FC<EmailTemplateProps> = ({ username, promptTitle, promptDescription, promptLink }) => {
+const EmailTemplate = ({ username, promptTitle, promptDescription, promptLink }: any) => {
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '600px', margin: '0 auto', padding: '20px', backgroundColor: '#f4f4f4' }}>
       {/* <div style={{ backgroundColor: '#007bff', padding: '10px 20px', textAlign: 'center' }}>

@@ -10,7 +10,6 @@ import mongoose from "mongoose";
 import Tag from "../database/models/tags.models";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
-import EmailTemplate from "@/components/shared/Email/EmailTemplate";
 
 const populatePrompt = async (query: any) => {
   return query
@@ -76,6 +75,7 @@ export const createPrompt = async ({
         await tagModel.save();
       }
     }
+
 
     return JSON.parse(JSON.stringify(newPrompt));
   } catch (err) {

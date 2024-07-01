@@ -85,6 +85,17 @@ export const getUserDataPopulatedFollows = async (id: string) => {
   }
 };
 
+export const getUserWithFollowers = async (id: string) => {
+    try {
+        await connectToDatabase();
+        const user = await User.findById(id).populate({ path: "followers" });
+        if (!user) throw new Error("User not found");
+        return JSON.parse(JSON.stringify(user));
+    } catch (error) {
+        handleError(error);
+    }
+}
+
 export const getLikedPrompts = async (id: string) => {
   try {
     await connectToDatabase();
