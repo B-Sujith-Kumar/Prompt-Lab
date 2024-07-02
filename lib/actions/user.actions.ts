@@ -86,9 +86,20 @@ export const getUserDataPopulatedFollows = async (id: string) => {
 };
 
 export const getUserWithFollowers = async (id: string) => {
+  try {
+    await connectToDatabase();
+    const user = await User.findById(id).populate({ path: "followers" });
+    if (!user) throw new Error("User not found");
+    return JSON.parse(JSON.stringify(user));
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const getUsersWithAllowedEmailNotification = async (id: string) => {
     try {
         await connectToDatabase();
-        const user = await User.findById(id).populate({ path: "followers" });
+        const user = await User.findById(id).populate({ path: "sendEmailNotification" });
         if (!user) throw new Error("User not found");
         return JSON.parse(JSON.stringify(user));
     } catch (error) {
@@ -174,42 +185,52 @@ export const toggleFollowStatus = async ({
 };
 
 export const checkIsFollowing = async (userId: string, id: string) => {
-    try {
-      const main = await User.findById(id);
-      const follower = await User.findById(userId);
-      if (main.followers.includes(userId) && follower.following.includes(id)) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
- export const handleFollow = async ({userId, id}: {userId: string, id: string}) => {
-    await connectToDatabase();
-
+  try {
     const main = await User.findById(id);
     const follower = await User.findById(userId);
-
-    if (!main || !follower) {
-      throw new Error("User not found");
-    }
-
     if (main.followers.includes(userId) && follower.following.includes(id)) {
-      main.followers = main.followers.filter(
-        (user: mongoose.Types.ObjectId) => user.toString() !== userId
-      );
-      follower.following = follower.following.filter(
-        (user: mongoose.Types.ObjectId) => user.toString() !== id
-      );
+      return true;
     } else {
-      main.followers.push(new mongoose.Types.ObjectId(userId));
-      follower.following.push(new mongoose.Types.ObjectId(id));
+      return false;
     }
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-    await main.save();
-    await follower.save();
-    revalidatePath(`/user/${id}`);
-  };
+export const handleFollow = async ({
+  userId,
+  id,
+}: {
+  userId: string;
+  id: string;
+}) => {
+  await connectToDatabase();
+
+  const main = await User.findById(id);
+  const follower = await User.findById(userId);
+
+  if (!main || !follower) {
+    throw new Error("User not found");
+  }
+
+  if (main.followers.includes(userId) && follower.following.includes(id)) {
+    main.followers = main.followers.filter(
+      (user: mongoose.Types.ObjectId) => user.toString() !== userId
+    );
+    follower.following = follower.following.filter(
+      (user: mongoose.Types.ObjectId) => user.toString() !== id
+    );
+    follower.allowEmailNotification = follower.allowEmailNotification.filter(
+      (user: mongoose.Types.ObjectId) => user.toString() !== id
+    );
+  } else {
+    main.followers.push(new mongoose.Types.ObjectId(userId));
+    follower.following.push(new mongoose.Types.ObjectId(id));
+    follower.allowEmailNotification.push(new mongoose.Types.ObjectId(id));
+  }
+
+  await main.save();
+  await follower.save();
+  revalidatePath(`/user/${id}`);
+};

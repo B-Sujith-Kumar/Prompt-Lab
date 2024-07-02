@@ -25,7 +25,7 @@ const FollowDetailsTab = ({ userData, userId }: any) => {
       const status: any = {};
       for (const follower of [...followers, ...following]) {
         const { isFollowing } = await getFollowingStatus({
-          currentUserId: userData._id,
+          currentUserId: userId,
           targetUserId: follower._id,
         });
         status[follower._id] = isFollowing;
@@ -33,7 +33,7 @@ const FollowDetailsTab = ({ userData, userId }: any) => {
       setFollowingStatus(status);
     };
     fetchFollowingStatus();
-  }, [followers, following, userData._id]);
+  }, [followers, following, userId]);
 
   const handleFollow = async (followerId: string) => {
     const { success } = await toggleFollowStatus({

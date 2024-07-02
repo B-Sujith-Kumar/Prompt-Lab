@@ -48,6 +48,11 @@ const UserSchema = new Schema({
       default: [],
     },
   ],
+  sendEmailNotification: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "User",
+    default: [],
+  }
 }, {timestamps: true, suppressReservedKeysWarning: true});
 
 const User = models.User || mongoose.model<IUser>("User", UserSchema);

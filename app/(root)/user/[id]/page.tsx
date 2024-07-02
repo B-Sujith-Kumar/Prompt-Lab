@@ -12,6 +12,8 @@ import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/database/models/user.model";
 import { SearchParamProps } from "@/types";
 import { auth } from "@clerk/nextjs";
+import { faBell, faBellSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
@@ -30,12 +32,55 @@ const isFollowing = async (userId: string, id: string) => {
   }
 };
 
+
+
+const checkAllowedEmailNotification = async (userId: string, id: string) => {
+  try {
+    const main = await User.findById(id);
+    const follower = await User.findById(userId);
+    if (
+      main.sendEmailNotification.includes(new mongoose.Types.ObjectId(userId))
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const page = async ({ params: { id } }: SearchParamProps) => {
   const { sessionClaims } = auth();
   const userId: any = sessionClaims?.userId as string;
   const userData = await getUserDataPopulatedFollows(id);
   const prompts = await getPromptsByUser(id);
   const follower = await isFollowing(userId, id);
+  const allowEmailNotification = await checkAllowedEmailNotification(
+    userId,
+    id
+  );
+  const handleAllowEmailNotification = async () => {
+    "use server"
+    try {
+      const main = await User.findById(id);
+      const follower = await User.findById(userId);
+      if (
+        main.sendEmailNotification.includes(new mongoose.Types.ObjectId(userId))
+      ) {
+        main.sendEmailNotification = main.sendEmailNotification.filter(
+          (user: mongoose.Types.ObjectId) => user.toString() !== userId
+        );
+      } else {
+        main.sendEmailNotification.push(new mongoose.Types.ObjectId(userId));
+      }
+  
+      await main.save();
+      revalidatePath(`/user/${id}`);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const handleFollow = async () => {
     "use server";
     await connectToDatabase();
@@ -54,9 +99,13 @@ const page = async ({ params: { id } }: SearchParamProps) => {
       follower.following = follower.following.filter(
         (user: mongoose.Types.ObjectId) => user.toString() !== id
       );
+      main.sendEmailNotification = main.sendEmailNotification.filter(
+        (user: mongoose.Types.ObjectId) => user.toString() !== userId
+      );
     } else {
       main.followers.push(new mongoose.Types.ObjectId(userId));
       follower.following.push(new mongoose.Types.ObjectId(id));
+      main.sendEmailNotification.push(new mongoose.Types.ObjectId(userId));
     }
 
     await main.save();
@@ -75,7 +124,7 @@ const page = async ({ params: { id } }: SearchParamProps) => {
           className="rounded-full max-sm:mx-auto sm:mt-3"
         />
         <div className="flex flex-col gap-4 mt-4 sm:flex-1 ">
-          <div className="flex flex-col sm:flex-row gap-4 sm:justify-between w-full items-center">
+          <div className="flex flex-col  sm:flex-row gap-4 sm:justify-between w-full items-center">
             <div className="flex flex-col gap-2">
               <h1 className="text-2xl max-sm:text-center">
                 {userData.firstName + " " + userData.lastName}
@@ -85,53 +134,30 @@ const page = async ({ params: { id } }: SearchParamProps) => {
               </h1>
             </div>
             {userId !== id && (
-              <form action={handleFollow} className="max-sm:w-full">
-                <button className="bg-btn-primary py-2 max-sm:rounded-xl font-medium rounded-lg max-sm:w-full sm:px-20">
-                  {follower ? "Unfollow" : "Follow"}
-                </button>
-              </form>
+              <div className="flex gap-6 max-md:w-full max-md:gap-3 max-md:flex-row">
+                <form action={handleFollow} className="max-sm:w-full">
+                  <button className="bg-btn-primary py-2 max-sm:rounded-xl font-medium rounded-lg max-sm:w-full sm:px-20 max-md:flex-1">
+                    {follower ? "Unfollow" : "Follow"}
+                  </button>
+                </form>
+                {follower && (
+                  <form action={handleAllowEmailNotification}>
+                    <button className="text-white bg-btn-primary rounded-full w-10 h-10 flex items-center justify-center">
+                      {!follower ? (
+                        ""
+                      ) : allowEmailNotification ? (
+                        <FontAwesomeIcon icon={faBell} aria-label="Notifications are ON"/>
+                      ) : (
+                        <FontAwesomeIcon icon={faBellSlash} />
+                      )}
+                    </button>
+                  </form>
+                )}
+              </div>
             )}
           </div>
-          {/* <div className="flex justify-between sm:hidden">
-            <div className="flex flex-col gap-1">
-              <h1 className="text-center text-lg">{userData.prompts.length}</h1>
-              <h1 className="text-center text-lg">Prompts</h1>
-            </div>
-            <div className="flex flex-col gap-1">
-              <h1 className="text-center text-lg">
-                {userData.followers.length}
-              </h1>
-              <h1 className="text-center text-lg">Followers</h1>
-            </div>
-            <div className="flex flex-col gap-1">
-              <h1 className="text-center text-lg">
-                {userData.following.length}
-              </h1>
-              <h1 className="text-center text-lg">Following</h1>
-            </div>
-          </div> */}
         </div>
       </div>
-      {/* <div className="flex gap-12  max-sm:hidden mt-10">
-        <div className="flex gap-2">
-          <h1 className="text-center text-lg font-bold">
-            {userData.prompts.length}
-          </h1>
-          <h1 className="text-center text-lg text-gray-300">Prompts</h1>
-        </div>
-        <div className="flex  gap-2">
-          <h1 className="text-center text-lg font-bold">
-            {userData.followers.length}
-          </h1>
-          <h1 className="text-center text-lg text-gray-300">Followers</h1>
-        </div>
-        <div className="flex  gap-2">
-          <h1 className="text-center text-lg font-bold">
-            {userData.following.length}
-          </h1>
-          <h1 className="text-center text-lg text-gray-300">Following</h1>
-        </div>
-      </div> */}
       <div className="mt-6">
         <FollowDetailsTab userData={userData} userId={userId} />
       </div>

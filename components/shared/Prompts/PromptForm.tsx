@@ -30,7 +30,10 @@ import { createPrompt, updatePrompt } from "@/lib/actions/prompts.actions";
 import { revalidatePath } from "next/cache";
 import { IComment, IPrompt } from "@/lib/database/models/prompt.model";
 import mongoose from "mongoose";
-import { getUserWithFollowers } from "@/lib/actions/user.actions";
+import {
+  getUserWithFollowers,
+  getUsersWithAllowedEmailNotification,
+} from "@/lib/actions/user.actions";
 
 type PromptFormProps = {
   userId: string;
@@ -45,6 +48,7 @@ const PromptForm = ({ userId, type }: PromptFormProps) => {
   const [selectedCollection, setSelectedCollection] = useState<string>("");
   const { startUpload } = useUploadThing("imageUploader");
   const router = useRouter();
+
   const addTag = (newTag: string) => {
     if (newTag.trim() && !tags.includes(newTag)) {
       setTags([...tags, newTag.trim()]);
@@ -108,12 +112,12 @@ const PromptForm = ({ userId, type }: PromptFormProps) => {
       });
       if (newPrompt) {
         form.reset();
+        const author = await getUsersWithAllowedEmailNotification(userId);
         router.push(`/prompt/${newPrompt._id}`);
-        const author = await getUserWithFollowers(userId);
         if (author) {
-            for (const follower of author.followers) {
+            for (const follower of author.sendEmailNotification) {
                 const res = await fetch(
-                    `${process.env.NODE_ENV == "development" ? "http://localhost:3000/" : "https://prompt-lab-two.vercel.app/"}api/mail`, 
+                    `${process.env.NODE_ENV == "development" ? "http://localhost:3000/" : "https://prompt-lab-two.vercel.app/"}api/mail`,
                     {
                     method: "POST",
                     headers: {
