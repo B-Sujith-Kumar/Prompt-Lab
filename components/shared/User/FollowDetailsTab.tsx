@@ -25,7 +25,7 @@ const FollowDetailsTab = ({ userData, userId }: any) => {
       const status: any = {};
       for (const follower of [...followers, ...following]) {
         const { isFollowing } = await getFollowingStatus({
-          currentUserId: userId,
+          currentUserId: userData._id,
           targetUserId: follower._id,
         });
         status[follower._id] = isFollowing;

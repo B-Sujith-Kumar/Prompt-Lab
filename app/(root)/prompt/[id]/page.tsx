@@ -42,6 +42,7 @@ const page = async ({ params: { id } }: SearchParamProps) => {
   const userData = await getUserData({ id: prompt.author._id });
   const userImage = await getUserImage(userId);
   const comments = await getComments(id);
+  console.log(comments);
   const relatedPrompts = await getRelatedPrompts({ prompt, limit: 6 });
   return (
     <div className="md:px-8 max-sm:px-6 pb-6">
@@ -118,9 +119,9 @@ const page = async ({ params: { id } }: SearchParamProps) => {
           photo={userImage}
           userId={userId}
         />
-        {comments.map((comment: any) => (
+        {comments && comments.map((comment: any) => (
           <div className="flex gap-4 mt-4 items-center mb-10" key={comment._id}>
-            <Link href={`/user/${comment.author._id}`}>
+            {comment.author !== null ? <Link href={`/user/${comment.author._id}`}>
               <Image
                 src={comment.author.photo}
                 width={50}
@@ -128,15 +129,21 @@ const page = async ({ params: { id } }: SearchParamProps) => {
                 alt="profile pic"
                 className="rounded-full hover:cursor-pointer"
               />
-            </Link>
+            </Link> : <Image
+                src="https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg"
+                width={50}
+                height={50}
+                alt="profile pic"
+                className="rounded-full hover:cursor-pointer"
+              />}
             <div className="flex justify-between w-full">
               <div className="w-full flex flex-col gap-2">
-                <Link
+                {comment.author !== null ? <Link
                   href={`/user/${comment.author._id}`}
                   className="text-white font-montserrat font-medium hover:cursor-pointer gap-4 text-sm"
                 >
                   @ {comment.author.username}
-                </Link>
+                </Link> : <span className="text-white font-montserrat font-medium hover:cursor-pointer gap-4 text-sm">@ Deleted User </span>}
                 <p className="text-white text-sm">{comment.content}</p>
               </div>
             </div>

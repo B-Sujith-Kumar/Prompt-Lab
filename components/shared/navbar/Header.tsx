@@ -23,7 +23,7 @@ const Header = () => {
       href: "/profile",
     },
     {
-      title: "Create Prompt",
+      title: "Go to Workspace",
       href: "/prompt/create",
     },
   ];

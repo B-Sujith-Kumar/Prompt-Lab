@@ -20,7 +20,6 @@ const page = async ({ searchParams }: SearchParamProps) => {
   const userId: any = sessionClaims?.userId as string;
   const userData = await getUserDataPopulatedFollows(userId);
   const prompts = await getPromptsByUser(userId);
-  console.log(prompts.totalPages)
   const likedPrompts = await getLikedPrompts(userId);
 
   return (

@@ -221,13 +221,13 @@ export const handleFollow = async ({
     follower.following = follower.following.filter(
       (user: mongoose.Types.ObjectId) => user.toString() !== id
     );
-    follower.allowEmailNotification = follower.allowEmailNotification.filter(
-      (user: mongoose.Types.ObjectId) => user.toString() !== id
+    main.sendEmailNotification = follower.sendEmailNotification.filter(
+      (user: mongoose.Types.ObjectId) => user.toString() !== userId
     );
   } else {
     main.followers.push(new mongoose.Types.ObjectId(userId));
     follower.following.push(new mongoose.Types.ObjectId(id));
-    follower.allowEmailNotification.push(new mongoose.Types.ObjectId(id));
+    main.sendEmailNotification.push(new mongoose.Types.ObjectId(userId));
   }
 
   await main.save();
