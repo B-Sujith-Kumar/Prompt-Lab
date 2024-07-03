@@ -24,6 +24,7 @@
         "@radix-ui/react-scroll-area": "^1.0.5",
         "@radix-ui/react-select": "^2.0.0",
         "@radix-ui/react-slot": "^1.0.2",
+        "@radix-ui/react-toast": "^1.2.1",
         "@react-email/components": "0.0.19",
         "@uploadthing/react": "^6.6.0",
         "ai": "^3.2.15",

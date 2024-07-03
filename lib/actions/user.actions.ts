@@ -268,3 +268,23 @@ export const getCollectionWithPrompts = async (collectionId: string) => {
     throw new Error("Error fetching collection with prompts");
   }
 };
+
+export const deleteCollectionAndPrompts = async (collectionId: string) => {
+    try {
+      await connectToDatabase();
+  
+      const collection = await Collection.findById(collectionId);
+      if (!collection) throw new Error("Collection not found");
+  
+      await Prompt.deleteMany({ collection: collectionId });
+      await Collection.findByIdAndDelete(collectionId);
+  
+      return {
+        message: "Collection and its prompts successfully deleted",
+        collectionId: collectionId,
+      };
+    } catch (error) {
+      console.error("Error deleting collection and prompts:", error);
+      throw new Error("Error deleting collection and prompts");
+    }
+};
