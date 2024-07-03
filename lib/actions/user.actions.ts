@@ -7,6 +7,7 @@ import User from "../database/models/user.model";
 import Prompt from "../database/models/prompt.model";
 import { revalidatePath } from "next/cache";
 import mongoose from "mongoose";
+import Collection from "../database/models/collection.model";
 
 export const createUser = async (user: createUserParams) => {
   try {
@@ -97,15 +98,17 @@ export const getUserWithFollowers = async (id: string) => {
 };
 
 export const getUsersWithAllowedEmailNotification = async (id: string) => {
-    try {
-        await connectToDatabase();
-        const user = await User.findById(id).populate({ path: "sendEmailNotification" });
-        if (!user) throw new Error("User not found");
-        return JSON.parse(JSON.stringify(user));
-    } catch (error) {
-        handleError(error);
-    }
-}
+  try {
+    await connectToDatabase();
+    const user = await User.findById(id).populate({
+      path: "sendEmailNotification",
+    });
+    if (!user) throw new Error("User not found");
+    return JSON.parse(JSON.stringify(user));
+  } catch (error) {
+    handleError(error);
+  }
+};
 
 export const getLikedPrompts = async (id: string) => {
   try {
@@ -233,4 +236,35 @@ export const handleFollow = async ({
   await main.save();
   await follower.save();
   revalidatePath(`/user/${id}`);
+};
+
+export const getUserCollections = async (clerkId: string) => {
+  try {
+    await connectToDatabase();
+    const user = await User.findOne({ clerkId });
+    if (!user) throw new Error("User not found");
+    const collections = await Collection.find({ author: user._id });
+    return JSON.parse(JSON.stringify(collections));
+  } catch (error) {
+    console.error("Error fetching collections:", error);
+    throw new Error("Error fetching collections");
+  }
+};
+
+export const getCollectionWithPrompts = async (collectionId: string) => {
+  try {
+    await connectToDatabase();
+    const collection = await Collection.findById(collectionId).populate({
+      path: "prompts",
+      populate: [
+        { path: "author", select: "_id username" },
+        { path: "tags", select: "_id name" },
+      ],
+    });
+    if (!collection) throw new Error("Collection not found");
+    return JSON.parse(JSON.stringify(collection));
+  } catch (error) {
+    console.error("Error fetching collection with prompts:", error);
+    throw new Error("Error fetching collection with prompts");
+  }
 };
