@@ -40,11 +40,11 @@ export type SearchParamProps = {
 };
 
 export type GetAllPromptParams = {
-  page: number;
-  limit: number;
-  collectionType: string;
-  tag: string;
-  query: string;
+  page?: number;
+  limit?: number;
+  collectionType?: string;
+  tag?: string;
+  query?: string;
 };
 
 export type UrlQueryParams = {

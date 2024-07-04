@@ -74,7 +74,6 @@ export const createPrompt = async ({
       }
     }
 
-
     return JSON.parse(JSON.stringify(newPrompt));
   } catch (err) {
     handleError(err);
@@ -491,24 +490,106 @@ export const deleteComment = async ({
   }
 };
 
-
 export const getMostLikedChatGPTPrompts = async (limit: number = 10) => {
+  try {
+    await connectToDatabase();
+
+    const prompts = await Prompt.find({ platform: "ChatGPT" })
+      .sort({ likes: -1 })
+      .limit(6)
+      .populate("author", "username _id")
+      .populate("tags");
+
+    const promptCount = await Prompt.countDocuments(prompts);
+    return {
+      data: JSON.parse(JSON.stringify(prompts)),
+      totalPages: Math.ceil(promptCount / 6),
+    };
+  } catch (error) {
+    console.error("Error fetching most liked ChatGPT prompts:", error);
+    throw new Error("Error fetching most liked ChatGPT prompts");
+  }
+};
+
+export const getPaginatedPrompts = async (page: number, limit: number) => {
+  try {
+    await connectToDatabase();
+
+    const prompts = await Prompt.find()
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate("author", "username _id") 
+      .populate("tags"); 
+
+    const totalPrompts = await Prompt.countDocuments();
+
+    return {
+      prompts: JSON.parse(JSON.stringify(prompts)),
+      totalPages: Math.ceil(totalPrompts / limit),
+    };
+  } catch (error) {
+    console.error("Error fetching paginated prompts:", error);
+    throw new Error("Error fetching paginated prompts");
+  }
+};
+
+export const getPromptsInfinite = async ({
+    query,
+    limit = 6,
+    page,
+    tag,
+  }: GetAllPromptParams) => {
     try {
       await connectToDatabase();
-  
-      const prompts = await Prompt.find({ platform: "ChatGPT" })
-        .sort({ likes: -1 })
-        .limit(6)
-        .populate('author', 'username _id')
-        .populate('tags'); 
-  
-        const promptCount = await Prompt.countDocuments(prompts);
-        return {
-          data: JSON.parse(JSON.stringify(prompts)),
-          totalPages: Math.ceil(promptCount / 6),
-        };
-    } catch (error) {
-      console.error("Error fetching most liked ChatGPT prompts:", error);
-      throw new Error("Error fetching most liked ChatGPT prompts");
+      let tagCondition = {};
+      if (tag) {
+        const tagId = await getIdTagByName(tag);
+        if (tagId) {
+          tagCondition = { tags: { $in: [tagId] } };
+        } else {
+          return {
+            data: [],
+            totalPages: 0,
+          };
+        }
+      }
+      const titleCondition = query
+        ? { title: { $regex: query, $options: "i" } }
+        : {};
+      const conditions = {
+        $and: [titleCondition, tagCondition],
+      };
+      const promptsQuery = Prompt.find(conditions)
+        .sort({ createdAt: "desc" })
+        .skip(0)
+        .limit(10);
+      const prompts = await populatePrompt(promptsQuery);
+      const promptCount = await Prompt.countDocuments(conditions);
+      return {
+        data: JSON.parse(JSON.stringify(prompts)),
+        totalPages: Math.ceil(promptCount / limit),
+      };
+    } catch (err) {
+      handleError(err);
     }
   };
+
+export const mostLikedImagePrompts = async (limit: number = 10) => {
+    try {
+        await connectToDatabase();
+        const platforms = ['Stable Diffusion', 'Leonardo AI', 'Midjourney']
+        const prompts = await Prompt.find({ platform: { $in: platforms } })
+        .sort({ likes: -1 })
+        .populate('author', 'username _id')
+        .populate('tags');
+        const promptCount = await Prompt.countDocuments(prompts);
+        return {
+            data: JSON.parse(JSON.stringify(prompts)),
+            totalPages: Math.ceil(promptCount / 6),
+        };
+    } catch (error) {
+        console.error('Error fetching most liked image prompts:', error);
+        throw new Error('Error fetching most liked image prompts');
+    }
+}

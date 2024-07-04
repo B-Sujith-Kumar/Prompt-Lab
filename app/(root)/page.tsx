@@ -1,7 +1,7 @@
 import Hero from "@/components/shared/Hero/Hero";
 import RecentlyAdded from "@/components/shared/Prompts/RecentlyAdded";
 import Search from "@/components/shared/Prompts/Search";
-import { getAllPrompts, getMostLikedChatGPTPrompts } from "@/lib/actions/prompts.actions";
+import { getAllPrompts, getMostLikedChatGPTPrompts, mostLikedImagePrompts } from "@/lib/actions/prompts.actions";
 import { SearchParamProps } from "@/types";
 import React from "react";
 import TagFilter from "@/components/shared/Prompts/TagFilter";
@@ -19,6 +19,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
     tag,
   });
   const chatGPTPrompts = await getMostLikedChatGPTPrompts();
+  const imagePrompts = await mostLikedImagePrompts();
   return (
     <div className="pb-6">
       <Hero />
@@ -42,7 +43,16 @@ export default async function Home({ searchParams }: SearchParamProps) {
             emptyStateSubtext="Come back later"
             collectionType="All_Prompts"
             limit={6}
-            page={page}
+            page={1}
+        />
+        <h1 className="font-montserrat pl-32  max-[1130px]:pl-12 max-[1130px]:pr-12 lg:pr-12 max-md:px-4 text-2xl mt-10 text-white font-semibold">Famous Midjourney, Stable Diffusion Prompts</h1>
+        <RecentlyAdded
+            data={imagePrompts?.data}
+            emptyTitle="No prompts found"
+            emptyStateSubtext="Come back later"
+            collectionType="All_Prompts"
+            limit={6}
+            page={1}
         />
     </div>
   );

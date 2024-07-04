@@ -47,16 +47,16 @@ const page = async ({ params: { id } }: SearchParamProps) => {
   return (
     <div className="md:px-8 max-sm:px-6 pb-6">
       <section className="flex max-md:flex-col max-md:max-w-xl md:max-w-7xl mx-auto gap-8  mt-10   font-worksans text-white md:items-center md:gap-10">
-        <div className="md:w-[74%] w-full">
+        <div className="md:w-[74%] w-full ">
           <Image
             src={prompt.thumbnail}
             alt={prompt.title}
             width={1400}
             height={400}
-            className="max-h-[400px] w-full object-cover rounded-lg"
+            className="max-h-[400px] md:h-full w-full md:w-[850px]  object-cover rounded-lg"
           />
         </div>
-        <div className="flex flex-col justify-between h-[100%]">
+        <div className="flex flex-col justify-between h-[100%] md:w-[55%]">
           <h1 className="font-montserrat text-2xl font-semibold max-sm:leading-9 md:leading-9 max-sm:text-xl">
             {prompt.title}
           </h1>
