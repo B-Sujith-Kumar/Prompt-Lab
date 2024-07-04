@@ -490,3 +490,25 @@ export const deleteComment = async ({
     return { success: false, message: "Failed to delete comment" };
   }
 };
+
+
+export const getMostLikedChatGPTPrompts = async (limit: number = 10) => {
+    try {
+      await connectToDatabase();
+  
+      const prompts = await Prompt.find({ platform: "ChatGPT" })
+        .sort({ likes: -1 })
+        .limit(6)
+        .populate('author', 'username _id')
+        .populate('tags'); 
+  
+        const promptCount = await Prompt.countDocuments(prompts);
+        return {
+          data: JSON.parse(JSON.stringify(prompts)),
+          totalPages: Math.ceil(promptCount / 6),
+        };
+    } catch (error) {
+      console.error("Error fetching most liked ChatGPT prompts:", error);
+      throw new Error("Error fetching most liked ChatGPT prompts");
+    }
+  };

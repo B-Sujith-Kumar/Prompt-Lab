@@ -6,9 +6,9 @@ type CollectionProps = {
   data: IPrompt[];
   emptyTitle: string;
   emptyStateSubtext: string;
-  page: number;
+  page?: number;
   limit: number;
-  totalPages: number;
+  totalPages?: number;
   collectionType: "All_Prompts" | "Related_Prompts" | "My_Prompts";
   urlParamName?: string;
 };

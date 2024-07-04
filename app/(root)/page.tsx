@@ -1,10 +1,11 @@
 import Hero from "@/components/shared/Hero/Hero";
 import RecentlyAdded from "@/components/shared/Prompts/RecentlyAdded";
 import Search from "@/components/shared/Prompts/Search";
-import { getAllPrompts } from "@/lib/actions/prompts.actions";
+import { getAllPrompts, getMostLikedChatGPTPrompts } from "@/lib/actions/prompts.actions";
 import { SearchParamProps } from "@/types";
 import React from "react";
 import TagFilter from "@/components/shared/Prompts/TagFilter";
+import RelatedPrompts from "@/components/shared/Prompts/RelatedPrompts";
 
 export default async function Home({ searchParams }: SearchParamProps) {
   const page = Number(searchParams?.page) || 1;
@@ -17,6 +18,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
     collectionType: "All_Prompts",
     tag,
   });
+  const chatGPTPrompts = await getMostLikedChatGPTPrompts();
   return (
     <div className="pb-6">
       <Hero />
@@ -33,6 +35,15 @@ export default async function Home({ searchParams }: SearchParamProps) {
         page={page}
         totalPages={prompts?.totalPages}
       />
+      <h1 className="font-montserrat pl-32  max-[1130px]:pl-12 max-[1130px]:pr-12 lg:pr-12 max-md:px-4 text-2xl mt-10 text-white font-semibold">Famous ChatGPT Prompts</h1>
+        <RecentlyAdded
+            data={chatGPTPrompts?.data}
+            emptyTitle="No prompts found"
+            emptyStateSubtext="Come back later"
+            collectionType="All_Prompts"
+            limit={6}
+            page={page}
+        />
     </div>
   );
 }
