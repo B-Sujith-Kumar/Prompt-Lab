@@ -24,9 +24,3 @@
 body, html, main {
     scroll-behavior: smooth;
 }
-
-.bg-img {
-  background-image: url('../public/images/contact-glow.944a9bf8.svg');
-  background-size: cover;
-  background-position: left bottom;
-}

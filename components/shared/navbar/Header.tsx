@@ -7,7 +7,7 @@ import hamburger from "../../../public/icons/hamburger.svg";
 import close from "../../../public/icons/close.svg";
 import { usePathname } from "next/navigation";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import "../../../app/globals.css"
+
 
 const Header = () => {
   const links = [
@@ -109,7 +109,7 @@ const Header = () => {
         <div
           className={`${
             isOpen ? "block" : "hidden"
-          } lg:hidden fixed min-h-screen bg-img bg-background z-50 w-full top-0 left-0 px-7 bg-img`}
+          } lg:hidden fixed min-h-screen bg-background bg-img z-50 w-full top-0 left-0 px-7 `}
         >
           {/* <div className="gradient -z-10"></div> */}
           <div className="flex justify-between pt-10">
