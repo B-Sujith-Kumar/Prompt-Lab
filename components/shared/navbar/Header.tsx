@@ -15,10 +15,7 @@ const Header = () => {
       title: "Home",
       href: "/",
     },
-    {
-      title: "About",
-      href: "/about",
-    },
+    
     {
       title: "My Profile",
       href: "/profile",
@@ -26,6 +23,10 @@ const Header = () => {
     {
         title: "Search",
         href: "/all-prompts",
+    },
+    {
+        title: "About",
+        href: "/about",
     },
     {
       title: "Go to Workspace",
