@@ -23,6 +23,10 @@ const Header = () => {
       href: "/profile",
     },
     {
+        title: "Search",
+        href: "/all-prompts",
+    },
+    {
       title: "Go to Workspace",
       href: "/prompt/create",
     },
@@ -38,7 +42,7 @@ const Header = () => {
         <div className="flex gap-x-8 font-worksans text-lg max-lg:hidden">
           {links.map(
             (link, i) =>
-              i < 3 && (
+              i < 4 && (
                 <Link
                   href={link.href}
                   key={link.title}
@@ -56,7 +60,7 @@ const Header = () => {
         <div className="font-worksans flex gap-x-6 items-center max-lg:hidden">
           {links.map(
             (link, i) =>
-              i >= 3 && (
+              i >= 4 && (
                 <Link
                   href={link.href}
                   key={link.title}
@@ -123,7 +127,7 @@ const Header = () => {
           <div className="flex flex-col mt-6 font-worksans">
             {links.map(
               (link, i) =>
-                i < 3 && (
+                i < 4 && (
                   <Link
                     href={link.href}
                     key={link.title}
@@ -137,7 +141,7 @@ const Header = () => {
             <div className="font-worksans flex gap-x-6 items-center mt-10 max-sm:flex-col max-sm:gap-y-8">
               {links.map(
                 (link, i) =>
-                  i >= 3 && (
+                  i >= 4 && (
                     <Link
                       href={link.href}
                       key={link.title}
