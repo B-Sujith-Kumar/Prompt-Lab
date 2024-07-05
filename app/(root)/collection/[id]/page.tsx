@@ -1,4 +1,5 @@
 import DeleteCollection from "@/components/shared/Collections/DeleteCollection";
+import CollectionPrompts from "@/components/shared/Prompts/CollectionPrompts";
 import SearchPrompts from "@/components/shared/SearchPromptResult/SearchPrompts";
 import { getCollectionWithPrompts } from "@/lib/actions/user.actions";
 import { SearchParamProps } from "@/types";
@@ -17,8 +18,9 @@ const Page = async ({ params: { id } }: SearchParamProps) => {
         </div>
       </h1>
       <div className="mt-4">
-        <SearchPrompts
+        <CollectionPrompts
           data={collection.prompts}
+          collectionId={collection._id}
           emptyTitle="No prompts found"
           emptyStateSubtext="Add prompts to this collection to get started."
         />

@@ -7,6 +7,7 @@ import { handleError } from "../utils";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import User from "../database/models/user.model";
+import { revalidatePath } from "next/cache";
 
 type createCollectionProps = {
   collectionName: string;
@@ -63,5 +64,24 @@ export const fetchAuthorCollections = async () => {
   } catch (error) {
     handleError(error);
     return new NextResponse("Internal Server Error", { status: 500 });
+  }
+};
+
+export const removePromptFromCollection = async (
+  promptId: string,
+  collectionId: string
+) => {
+  try {
+    await connectToDatabase();
+    const collection = await Collection.findById(collectionId);
+    if (!collection) {
+      throw new Error("Collection not found");
+    }
+    collection.prompts = collection.prompts.filter(
+      (prompt: mongoose.Types.ObjectId) => prompt.toString() !== promptId
+    );
+    await collection.save();
+  } catch (error) {
+    handleError(error);
   }
 };
