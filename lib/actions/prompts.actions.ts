@@ -230,7 +230,6 @@ export const getPromptsByUser = async (id: string) => {
     await connectToDatabase();
     const prompts = await populatePrompt(Prompt.find({ author: id }));
     const promptCount = await Prompt.countDocuments(prompts);
-    console.log("prompt count : ", prompts.length);
     return {
       data: JSON.parse(JSON.stringify(prompts)),
       totalPages: Math.ceil(prompts.length / 6),

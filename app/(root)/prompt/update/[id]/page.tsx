@@ -9,7 +9,6 @@ const UpdatePrompt = async ({params: {id}} : SearchParamProps) => {
   const { sessionClaims } = auth();
   const userId: any = sessionClaims?.userId as string;
   const prompt = await getPromptById(id);
-//   console.log(userId);
   return (
     <div className="flex">
       <Sidebar />

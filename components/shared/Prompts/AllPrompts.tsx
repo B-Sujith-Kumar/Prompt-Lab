@@ -16,7 +16,6 @@ const AllPrompts = ({ userId }: { userId: string }) => {
     const fetchData = async () => {
       setLoading(true);
       const prompts = await getPrompts();
-      console.log(prompts);
       setData(prompts);
       setFilteredData(prompts);
       setLoading(false);

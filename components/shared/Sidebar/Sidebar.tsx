@@ -38,7 +38,6 @@ const Sidebar = () => {
       try {
         const data = await getUserCollections(userId!);
         setCollections(data);
-        console.log(data);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching collections:", error);

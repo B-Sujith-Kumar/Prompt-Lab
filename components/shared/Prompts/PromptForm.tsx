@@ -103,7 +103,6 @@ const PromptForm = ({ userId, type }: PromptFormProps) => {
       }
       uploadedImageUrl = uploadedImages[0].url;
     }
-    console.log(newForm, uploadedImageUrl);
     try {
       const newPrompt = await createPrompt({
         prompt: { ...newForm, thumbnail: uploadedImageUrl },

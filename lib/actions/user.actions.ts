@@ -12,9 +12,7 @@ import Collection from "../database/models/collection.model";
 export const createUser = async (user: createUserParams) => {
   try {
     await connectToDatabase();
-    console.log(user);
     const newUser = await User.create(user);
-    console.log(newUser);
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
     handleError(error);

@@ -5,7 +5,6 @@ import Sidebar from "@/components/shared/Sidebar/Sidebar";
 const CreatePrompt = async () => {
   const { sessionClaims } = auth();
   const userId: any = sessionClaims?.userId as string;
-//   console.log(userId);
   return (
     <div className="flex">
       <Sidebar />

@@ -49,7 +49,6 @@ const DetailsBar = ({ userData, prompt, userId }: any) => {
   useEffect(() => {
     const fetchCollections = async () => {
       const collections = await getCollections(userId);
-      console.log(collections);
       setCollections(collections);
     };
     fetchCollections();
