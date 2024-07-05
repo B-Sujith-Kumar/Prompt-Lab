@@ -28,6 +28,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [collections, setCollections] = useState<any[]>([]);
   const [collapsibleOpen, setCollapsibleOpen] = useState(false);
+  const [mobileCollapsibleOpen, setMobileCollapsibleOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const path = usePathname();
 
@@ -160,12 +161,12 @@ const Sidebar = () => {
             <Collapsible>
               <CollapsibleTrigger
                 className={`flex w-full py-2 gap-4 items-center text-white hover:bg-gray-700 px-3 rounded-md`}
-                onClick={() => setCollapsibleOpen(!collapsibleOpen)}
+                onClick={() => setMobileCollapsibleOpen(!mobileCollapsibleOpen)}
               >
                 <FontAwesomeIcon icon={faBriefcase} />
                 <div className="flex items-center justify-between w-full">
                   <p>Collections</p>
-                  {collapsibleOpen ? (
+                  {mobileCollapsibleOpen ? (
                     <FontAwesomeIcon icon={faAngleUp} />
                   ) : (
                     <FontAwesomeIcon icon={faAngleDown} />

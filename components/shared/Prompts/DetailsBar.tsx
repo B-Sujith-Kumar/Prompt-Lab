@@ -1,22 +1,39 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { faComment, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBookmark,
+  faComment,
+  faThumbsUp,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import Image from "next/image";
 import { likePrompt } from "@/lib/actions/prompts.actions";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { checkIsFollowing, handleFollow } from "@/lib/actions/user.actions";
+import {
+  addPromptToCollection,
+  checkIsFollowing,
+  getCollections,
+  handleFollow,
+} from "@/lib/actions/user.actions";
 import ClipLoader from "react-spinners/ClipLoader";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { useToast } from "@/components/ui/use-toast";
 
 const DetailsBar = ({ userData, prompt, userId }: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [likes, setLikes] = useState(prompt.likes.length);
   const [liked, setLiked] = useState(prompt.likes.includes(userId));
+  const [collections, setCollections] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
     const checkFollowing = async () => {
@@ -28,6 +45,38 @@ const DetailsBar = ({ userData, prompt, userId }: any) => {
 
     checkFollowing();
   }, [userId, userData._id]);
+
+  useEffect(() => {
+    const fetchCollections = async () => {
+      const collections = await getCollections(userId);
+      console.log(collections);
+      setCollections(collections);
+    };
+    fetchCollections();
+  }, []);
+
+  const savePrompt = async (collectionId: string) => {
+    try {
+      const res = await addPromptToCollection(collectionId, prompt._id);
+      if (res?.success) {
+        if (res.message === "Exists") {
+            toast({
+                title: "Already saved",
+                description: "Prompt is already saved to this collection.",
+                color: "white"
+            });
+            return;
+        }
+        toast({
+            title: "Saved to collection",
+            description: "Prompt has been successfully saved to collection.",
+            color: "white"
+          });
+      }
+    } catch (error) {
+      console.error("Error adding prompt to collection:", error);
+    }
+  };
 
   const handleFollowClick = async () => {
     setShowSpinner(true);
@@ -97,9 +146,11 @@ const DetailsBar = ({ userData, prompt, userId }: any) => {
             </div>
           )}
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-center flex-wrap">
           <Button
-            className={`flex gap-2 ${liked ? "bg-btn-primary" : "bg-gray-600"} text-lg`}
+            className={`flex gap-2 ${
+              liked ? "bg-btn-primary" : "bg-gray-600"
+            } text-lg`}
             type="button"
             onClick={handleLike}
           >
@@ -114,6 +165,25 @@ const DetailsBar = ({ userData, prompt, userId }: any) => {
               <p>{prompt.comments.length}</p>
             </Link>
           </Button>
+          <Popover>
+            <PopoverTrigger className="flex items-center gap-2 bg-gray-600 text-lg py-[6px] px-4 rounded-lg">
+              <FontAwesomeIcon icon={faBookmark} />
+              <p>Save</p>
+            </PopoverTrigger>
+            <PopoverContent className="text-white font-worksans bg-background w-56">
+              <div className="flex flex-col gap-2 ">
+                {collections.map((collection: any) => (
+                  <p
+                    key={collection._id}
+                    className="hover:cursor-pointer"
+                    onClick={() => savePrompt(collection._id)}
+                  >
+                    {collection.name}
+                  </p>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </div>

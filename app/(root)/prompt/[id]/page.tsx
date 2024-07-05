@@ -42,7 +42,6 @@ const page = async ({ params: { id } }: SearchParamProps) => {
   const userData = await getUserData({ id: prompt.author._id });
   const userImage = await getUserImage(userId);
   const comments = await getComments(id);
-  console.log(comments);
   const relatedPrompts = await getRelatedPrompts({ prompt, limit: 6 });
   return (
     <div className="md:px-8 max-sm:px-6 pb-6">

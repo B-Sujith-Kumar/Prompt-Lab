@@ -288,3 +288,46 @@ export const deleteCollectionAndPrompts = async (collectionId: string) => {
       throw new Error("Error deleting collection and prompts");
     }
 };
+
+export const getCollections = async (userId: string) => {
+    try {
+      await connectToDatabase();
+      const user = await User.findOne({ _id: userId });
+      if (!user) throw new Error("User not found");
+      const collections = await Collection.find({ author: user._id });
+      return JSON.parse(JSON.stringify(collections));
+    } catch (error) {
+      console.error("Error fetching collections:", error);
+      throw new Error("Error fetching collections");
+    }
+  };
+
+export const addPromptToCollection = async (collectionId: string, promptId: string) => {
+    try {
+      await connectToDatabase();
+  
+      const collection = await Collection.findById(collectionId);
+      if (!collection) throw new Error("Collection not found");
+      const prompt = await collection.prompts.includes(new mongoose.Types.ObjectId(promptId));
+      if (prompt) {
+        return {
+            message: "Exists",
+            collectionId: collectionId,
+            promptId: promptId,
+            success: true,
+          };
+      }
+      collection.prompts.push(promptId);
+      await collection.save();
+  
+      return {
+        message: "Prompt added to collection",
+        collectionId: collectionId,
+        promptId: promptId,
+        success: true,
+      };
+    } catch (error) {
+      console.error("Error adding prompt to collection:", error);
+      throw new Error("Error adding prompt to collection");
+    }
+}
