@@ -31,9 +31,9 @@ Welcome to **PromptLab**, a platform where users can share AI prompts with each 
 To run PromptLab locally, follow these instructions:
 
 1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/B-Sujith-Kumar/prompt-lab.git
-   ```
+```bash
+git clone https://github.com/B-Sujith-Kumar/prompt-lab.git
+```
 2. **Navigate to the directory**: `cd prompt-lab`
 3. **Install dependencies**: `npm install`
 4. **Set up environment variables** as follows:
@@ -55,9 +55,9 @@ NEXT_PUBLIC_HOST_URL=
 NEXT_PUBLIC_GEMINI_API_KEY=
 ```
 5. Start the development server:
-   ```bash
-   npm run dev
-   ```
+```bash
+npm run dev
+```
 ## 🤝 Contributing
 
 Contributions are welcome! Please follow these steps to contribute:
